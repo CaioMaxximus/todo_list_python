@@ -1,0 +1,4 @@
+- Tasks manager
+	
+	-create new tasks
+	-remove_tasks

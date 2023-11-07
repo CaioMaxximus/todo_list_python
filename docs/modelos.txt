@@ -1,0 +1,19 @@
+task
+	- name
+	- time_to_expire
+	- text_content
+	- expired
+	- completed
+	
+	+ set_title
+	+ set_text
+	+ set_date
+	 
+
+task_mamager
+
+	-tasks
+	
+	+list_tasks
+	+search_task
+	

@@ -3,11 +3,11 @@
 
 """""
 import json
-from models import task as taskmodel
+from ..models.task import task as taskmodel
 import random
 import string
 
-dataPath = "../../db/data.json"
+dataPath = "C:\\Users\\caios\\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\db\\data.json"
 
 
 def generate_id():
@@ -27,6 +27,9 @@ def save_new_task(tasks , newTask):
     id = generate_id()
     newTask.set_id(id)
     tasks[id] = newTask
+    ##Adicionar thread
+    write_in_file(list(tasks.values()))
+    return tasks
 
 def write_in_file(tasks):
     json_objects_list = json.dump([obj.__dict__ for obj in tasks])
