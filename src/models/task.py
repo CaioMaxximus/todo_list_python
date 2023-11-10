@@ -5,7 +5,7 @@ class task():
         self.title = title
         self.content = content
         self.completed = completed
-        self.expire_date = expire_date.strftime("%m/%d/%Y, %H:%M:%S")
+        self.expire_date = expire_date
         
         
     def get_id(self):
@@ -30,6 +30,13 @@ class task():
         
     def set_complete(self):
         self.completed = not self.completed    
+        
+    def __str__(self):
+        exit = f"""-> Id: {self.id}\n
+                Title: {self.title}\n
+                Content: {self.content}
+                <-\n"""
+        return exit
         
     
     

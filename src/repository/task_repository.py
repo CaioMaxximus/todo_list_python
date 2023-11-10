@@ -3,9 +3,10 @@
 
 """""
 import json
-from ..models.task import task as taskmodel
+from models.task import task as taskmodel
 import random
 import string
+from datetime import datetime
 
 dataPath = "C:\\Users\\caios\\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\db\\data.json"
 
@@ -32,14 +33,21 @@ def save_new_task(tasks , newTask):
     return tasks
 
 def write_in_file(tasks):
-    json_objects_list = json.dump([obj.__dict__ for obj in tasks])
     with open(dataPath , 'w') as json_file:
-        json_file.write(json_objects_list)
-        json_file.close()
+        json.dump([obj.__dict__ for obj in tasks] , json_file)
+
+        # json_file.write(json_objects_list)
+        # json_file.close()
     
 
-# def remove_task():
-#     pass
+def remove_task(id,tasks):
+    
+    try:
+        del tasks[id]
+        write_in_file(list(tasks.values()))
+        return tasks
+    except ValueError:
+        print(f"Invalid id Value! {id}")
 
 def remove_all_tasks():
     write_in_file([])
@@ -51,10 +59,13 @@ def remove_all_tasks():
 def get_all_tasks():
     tasks = load_json_file()
     tasks_obj = {}
+    print("chamou")
     for task in tasks:
+        # date = task["expire_date"]
+        # task["expire_date"] = datetime.strptime(date ,"%m/%d/%Y, %H:%M:%S")
         newT = taskmodel(**task)
         tasks_obj[newT.get_id()] = (newT)
-    return newT
+    return tasks_obj
     
     
-print(get_all_tasks())
+# print(get_all_tasks())
