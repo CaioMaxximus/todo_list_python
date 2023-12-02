@@ -11,11 +11,11 @@ class to_do_app(tk.Tk):
     def __init__(self, tasks , *args, **kwargs ):
         
         tk.Tk.__init__(self, *args, **kwargs)
-        self.container = tk.Frame(self)
+        self.container = tk.Canvas(self,  width=500, height=500)
         self.container.pack(side = "top", fill = "both" , expand= True)
-        
-        self.container.rowconfigure(0,weight=1)
-        self.container.columnconfigure(0,weight=1)
+        # self.container.grid(stick = "nswe")
+        self.container.grid_rowconfigure(0,weight=1)
+        self.container.grid_columnconfigure(0,weight=1)
         self.stack = []
         # self.pages = []
         self.tasks = tasks
@@ -28,8 +28,7 @@ class to_do_app(tk.Tk):
         # self.stack_page(frame)
             
             # self.pages.appen(e)
-            
-            
+                
         self.observers = []
         self.observers.append(frame)
             
@@ -85,7 +84,7 @@ class HomeP(tk.Frame):
         
         ##Creation Button
         
-        buttonFilter = tk.Button(self.frameTopBar,text="Filter",command= self.filter_tasks_by_complete)
+        buttonFilter = ttk.Button(self.frameTopBar,text="Filter",command= self.filter_tasks_by_complete)
         buttonFilter.grid(row=0 ,column=1)
         # button.pack()
         
@@ -96,32 +95,42 @@ class HomeP(tk.Frame):
                                   , width = 5,height=3)
         buttonCreateT.grid(row=0 ,column=2)
         
-        self.downFrame = tk.Frame(self)
-        self.downFrame.grid(row=1,column=0,sticky="ew")
-        self.downFrame.columnconfigure(0,weight=10)
-        self.downFrame.columnconfigure(1,weight=2)
+        self.downFrame = tk.Frame(self, bg = "yellow")
+        self.downFrame.grid(row=1,column=0,sticky="nsew")
+        self.downFrame.grid_rowconfigure(0,weight = 1)
+        self.downFrame.grid_columnconfigure(0,weight=10)
+        self.downFrame.grid_columnconfigure(1,weight=2)
 
         self.canvas = tk.Canvas(self.downFrame,bg="blue")
-        self.canvas.grid(row=0, column=0, sticky="ewns")
-        self.canvas.grid_rowconfigure(0, weight=1)
-        self.canvas.grid_columnconfigure(0, weight=1)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.canvas.rowconfigure(0, weight=1)
+        self.canvas.columnconfigure(0, weight=1)
 
-        self.scroll_bar = tk.Scrollbar(self.downFrame, orient="vertical", command = self.canvas.yview)
+        self.scroll_bar = ttk.Scrollbar(self.downFrame, orient="vertical", command = self.canvas.yview)
         self.scroll_bar.grid(row=0, column=1, sticky='ns')
         self.canvas.config(yscrollcommand = self.scroll_bar.set)
         
-        
         #Frames list
-        self.frameTasks = tk.Frame(self.canvas,borderwidth=2, relief="solid",background='red')
-        self.frameTasks.grid(row=0,column=0,sticky="ew")
-        self.frameTasks.grid_columnconfigure(0, weight=1)
-        self.frameTasks.grid_columnconfigure(1, weight=1)
-        
-        self.canvas.create_window((0, 0), window=self.frameTasks, anchor='nw')
+        self.frameTasks = tk.Frame(self.canvas,borderwidth=2, relief="solid",
+                                   background='red',width=470, 
+                                   height=420)
+        # self.frameTasks.grid(row = 0 ,column=0,sticky= 'ew')
+        self.frameTasks.grid_columnconfigure(0, weight=10)
+        self.frameTasks.grid_columnconfigure(1, weight=10)
+        self.frameTasks.propagate(False)
         # self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        # frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid",
+                                #   bg="lightgray",height=1000,width=1000)
+        # frame_task.grid()
+        self.canvas.create_window((0, 0), window=self.frameTasks, anchor='nw')
+        self.canvas.bind("<Configure>", self.on_configure)
 
+        
         self.list_tasks(self.tasks.values())
         
+    def on_configure(event):
+        # Atualiza a configuração do scrollregion quando o tamanho do Canvas muda
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def list_tasks(self, tasks):
         
@@ -132,17 +141,25 @@ class HomeP(tk.Frame):
         row_counter = 0
         for i , task in enumerate(tasks):
             # print(task)
-            frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid", bg="lightgray",height=50)
-            frame_task.grid(row = (row_counter // 2) , column = (i % 2),sticky="ew")
-            title_label = ttk.Label(frame_task, text=task.title)
+            columnN = (i % 2)
+            paddX = (1, 10) if columnN == 0 else (10, 1)
+            frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid",
+                                  bg="lightgray")
+           
+
+            frame_task.grid(row = (row_counter // 2) , column = columnN,padx=paddX,pady=5)
+            frame_task.rowconfigure(0, weight=1)
+            frame_task.rowconfigure(1, weight=10)
+            title_label = tk.Label(frame_task, text=task.title ,wraplength=110 )
             title_label.grid(row=0, column=0, padx=5, pady=2)
-            content_label = ttk.Label(frame_task, text=task.content)
-            content_label.grid(row=1, column=0, padx=5, pady=2)
+            content_label = tk.Label(frame_task, text=task.content, width=29, height=20,wraplength=110 )
+            content_label.grid(row=1, column=0)
             row_counter += 1
             
         self.frameTasks.update_idletasks()
-        # self.config(width=300,height=300)
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        self.canvas.create_window((0, 0), window=self.frameTasks, anchor='nw')
+
             
     def filter_tasks_by_complete(self):
         
@@ -170,8 +187,6 @@ class HomeP(tk.Frame):
         self.tasks = self.controler.get_tasks()
         self.list_tasks(self.tasks.values())
         
-        
-        
     
 class CreateP(tk.Frame):
     def __init__(self,parent, controler):
@@ -181,42 +196,48 @@ class CreateP(tk.Frame):
         self.grid(row=0,column=0, sticky ="nsew")
         self.grid_rowconfigure(0,weight=1)
         self.grid_rowconfigure(1,weight=8)
-        self.grid_rowconfigure(2,weight=1)
+        self.grid_rowconfigure(2,weight=8)
+        self.grid_rowconfigure(3,weight=1)
         self.grid_columnconfigure(0,weight=1)
         self.controler = controler
         # self.grid_columnconfigure(1,weight=1)
-        
         ##top bar
         
         self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid",background ="blue")
-        self.frameTopBar.grid(row= 0,column=0)
+        self.frameTopBar.grid(row= 0,column=0,sticky ="nsew")
         self.frameTopBar.grid_columnconfigure(0,weight=1)
-        self.frameTopBar.grid_columnconfigure(1,weight=1)
-        self.frameTopBar.grid_columnconfigure(2,weight=5)
-        
-        
-        
+        self.frameTopBar.grid_columnconfigure(1,weight=8)
+        self.frameTopBar.grid_columnconfigure(3,weight=1)
+        # self.frameTopBar.grid_columnconfigure(2,weight=5)
+            
         ##Title creation
-        self.titleIn = tk.Text( self.frameTopBar,bg="gray",height=2,width=25)
-        self.titleIn.grid(row = 0, column=0)
         
+        self.closeBtn = tk.Button( self.frameTopBar,text="X",command= self.controler.unstack ,bg="red",
+                                  height=2 ,width=3)
+        print("----")
+        self.controler.update()
+        self.update()
+        self.frameTopBar.update()
+        self.closeBtn.update()
+
+        self.closeBtn.grid(row=0,column=0,pady=(self.frameTopBar.winfo_height() - self.closeBtn.winfo_height()) // 2)
+        self.titleIn = tk.Text( self.frameTopBar,bg="gray",height=2,width=20)
+        self.titleIn.update()
+        self.titleIn.grid(row = 0, column=1,sticky="we")
         ##Calendar
         
-        self.calendarIn= Calendar(self.frameTopBar,year = 2020, month = 5,
+        self.calendarIn= Calendar(self,year = 2020, month = 5,
                day = 22,date_pattern = 'mm-dd-yyyy')
-        self.calendarIn.grid()
-        
-        ##Button to create
-        
-        self.createTakBtn = tk.Button( self,text="Create Task",command= self.create_task)
-        self.createTakBtn.grid(row=2,column=0)
-        
-        
-        ##Content area
+        self.calendarIn.grid(row = 1)
+            ##Content area
         
         self.contentIn = tk.Text(self,height=8,width=35)
-        self.contentIn.grid(row=1,column=0)
-
+        self.contentIn.grid(row=2,column=0)
+        
+        ##Button to create
+        self.createTakBtn = tk.Button( self,text="Create Task",command= self.create_task)
+        self.createTakBtn.grid(row=3,column=0)
+        
     def create_task(self):
         title = self.titleIn.get("1.0", "end-1c")
         expireD = self.calendarIn.get_date()
@@ -224,8 +245,6 @@ class CreateP(tk.Frame):
         print(title,expireD,content)
         self.controler.createTask(title,content,expireD)
         self.controler.unstack()
-    
-    
 
 
 def init(tasks):
