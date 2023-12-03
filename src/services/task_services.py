@@ -17,6 +17,7 @@ def add_new_task(tasks , title , content, expire_date):
     return tasks
 
 def remove_task_by_id(tasks , id):
-    task_repository.remove_task(tasks , id)
+    # print(tasks)
+    return task_repository.remove_task(tasks , id)
     
     

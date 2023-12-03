@@ -40,7 +40,7 @@ def write_in_file(tasks):
         # json_file.close()
     
 
-def remove_task(id,tasks):
+def remove_task(tasks,id):
     
     try:
         del tasks[id]
