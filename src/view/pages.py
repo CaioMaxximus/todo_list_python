@@ -3,6 +3,7 @@ import tkinter as tk
 from tkcalendar import Calendar
 from services import task_services 
 from functools import partial
+import asyncio
 
 
 class to_do_app(tk.Tk):
@@ -11,6 +12,8 @@ class to_do_app(tk.Tk):
     def __init__(self, tasks , *args, **kwargs ):
         
         tk.Tk.__init__(self, *args, **kwargs)
+        
+        self.loop = asyncio.get_event_loop()
         self.container = tk.Canvas(self,  width=500, height=500)
         self.container.pack(side = "top", fill = "both" , expand= True)
         # self.container.grid(stick = "nswe")
@@ -27,6 +30,7 @@ class to_do_app(tk.Tk):
         frame.tkraise()
         self.observers = []
         self.observers.append(frame)
+        asyncio.create_task(self.updater(1/120))
             
     def unstack(self):
         if(len(self.stack)>1):
@@ -39,9 +43,9 @@ class to_do_app(tk.Tk):
         print(self.stack[-1])
         self.stack[-1].tkraise()
         
-    def createTask(self,title,content,expireD):
+    async def createTask(self,title,content,expireD):
         print(self.tasks)
-        self.tasks = task_services.add_new_task(self.tasks.copy() ,title,content,expireD)
+        self.tasks = await task_services.add_new_task(self.tasks.copy() ,title,content,expireD)
         self.notify()
     
     def notify(self):
@@ -51,8 +55,21 @@ class to_do_app(tk.Tk):
     def get_tasks(self):
         return self.tasks
     
+    async def updater(self, interval):
+        print("chamou updater")
+        while True:
+            self.update()
+            await asyncio.sleep(interval)
     
-        
+    
+    async def remove_task_confirmed(self , new_window , callback ,task_id):
+        # print(task_id)
+        # print(self.tasks[task_id])
+        print("removi tudo!")
+        self.tasks = await task_services.remove_task_by_id(self.tasks , task_id)
+        # self.deiconify()
+        callback()
+        new_window.destroy()  
     
     def remove_task(self,task , callback):
         
@@ -62,15 +79,6 @@ class to_do_app(tk.Tk):
         def close_window(event):
             self.deiconify()
             
-        def remove_task_confirmed(task_id):
-            # print(task_id)
-            # print(self.tasks[task_id])
-            new_window.destroy()
-            self.tasks =  task_services.remove_task_by_id(self.tasks , task_id)
-            callback()
-            self.deiconify()
-       
-        
         frame = tk.Frame(new_window,bg  = "white")
         frame.pack(side = "top", fill = "both" , expand= True)
         frame.rowconfigure(0,weight=1)
@@ -89,12 +97,19 @@ class to_do_app(tk.Tk):
             
         cancel_btn = tk.Button(bottow_frame, text="CANCEL" , command = new_window.destroy)
         cancel_btn.grid(row=0, column=0,padx=(1,10))
-        remove_btn = tk.Button(bottow_frame, text="REMOVE", bg="red", command = partial(remove_task_confirmed,task))
+        remove_btn = tk.Button(bottow_frame, text="REMOVE", bg="red", command =lambda : asyncio.create_task(self.remove_task_confirmed(new_window , callback , task)))
         remove_btn.grid(row=0,column=1 , padx=(10,1))
         new_window.bind("<Destroy>", lambda event: close_window(event))
         new_window.geometry('250x150')
         self.withdraw()
-        self.wait_window(new_window)
+        # self.wait_window(new_window)
+        
+    async def set_task_complete(self, id ,button):
+        await task_services.set_task_complete(id)
+        btText = button.cget("text")
+        changeTx = "o" if(btText == "O") else "O"
+        button.configure(text = changeTx)
+        
         
         
             
@@ -123,7 +138,6 @@ class HomeP(tk.Frame):
         # opM.pack()
         opM.grid(row=0 ,column=0)
         ##delayin button creation on the top bar
-        
         ##Creation Button
         
         buttonFilter = ttk.Button(self.frameTopBar,text="Filter",command= self.filter_tasks_by_complete)
@@ -184,11 +198,15 @@ class HomeP(tk.Frame):
         for widget in self.frameTasks.winfo_children():
             widget.destroy()
         row_counter = 0
+        print("_________")
+        print(tasks)
         for i , task in enumerate(tasks):
             # print(task)
             columnN = (i % 2)
             paddX = (1, 10) if columnN == 0 else (10, 1)
-            bgColor = "#00D9C0" if task.completed else "#FF2B52" 
+            expireDate = task.get_expire_date()
+            expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
+            expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
             frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid",
                                   )
             frame_task.grid(row = (row_counter // 2) , column = columnN,padx=paddX,pady=5)
@@ -197,20 +215,31 @@ class HomeP(tk.Frame):
             frame_task.rowconfigure(2, weight=10)
             
             frame_top = tk.Frame(frame_task)
-            frame_top.grid()
-            frame_top.grid_columnconfigure(0,weight = 3)
-            frame_top.grid_columnconfigure(1,weight = 1)
+            frame_top.grid(stick = "ew")
+            frame_top.grid_columnconfigure(0,weight = 1)
+            frame_top.grid_columnconfigure(1,weight = 3)
+            frame_top.grid_columnconfigure(2,weight = 1)
             frame_top.grid_rowconfigure(0, weight=1)
-            date_label = tk.Label(frame_top, text=task.expire_date )
-            date_label.grid(row=0, column=0, padx=(1,4))
-            remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg = "red" ,  
-                                   command= partial( self.controler.remove_task , task.id , self.notify))
-            remove_btn.grid(row = 0 , column=1)
+            
+            date_label = tk.Label(frame_top, text= expireDateText, bg = expireDateColor)
+            date_label.grid(row=0, column=1, padx=(1,4))
+            completeText = "o" if task.get_completed() else "O"
+            completeColor = "#FF2B52" if task.get_completed() else "#00D9C0"
+            complete_btn = tk.Button(frame_top , text = completeText , 
+                                     bg= completeColor , height=1, command =lambda : asyncio.create_task(self.controler.set_task_complete(task.get_id() ,complete_btn)))
+            complete_btn.grid(row=0 , column= 0)
             
             title_label = tk.Label(frame_task, text=task.title ,wraplength=110 )
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
+             
+            remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg = "red" ,  
+                                   command= lambda : (self.controler.remove_task(task.id , self.notify)))
+            remove_btn.grid(row = 0 , column=2)
             
-            content_label = tk.Label(frame_task, text=task.content, width=29, height=20,wraplength=120 , bg= bgColor)
+            
+            
+            contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 
+            content_label = tk.Label(frame_task, text=task.content, width=29, height=20,wraplength=120 , bg= contentColor)
             content_label.grid(row=2, column=0)
             row_counter += 1
             
@@ -292,19 +321,23 @@ class CreateP(tk.Frame):
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
-        self.createTakBtn = tk.Button( self,text="Create Task",command= self.create_task)
+        self.createTakBtn = tk.Button( self,text="Create Task",command= lambda : asyncio.create_task(self.create_task()))
         self.createTakBtn.grid(row=3,column=0)
         
-    def create_task(self):
+    async def create_task(self):
         title = self.titleIn.get("1.0", "end-1c")
         expireD = self.calendarIn.get_date()
         content = self.contentIn.get("1.0", "end-1c")
         print(title,expireD,content)
-        self.controler.createTask(title,content,expireD)
+        await self.controler.createTask(title,content,expireD)
         self.controler.unstack()
 
+exit = 1
 
-def init(tasks):
+async def init(tasks):
     root = to_do_app(tasks)
     root.geometry('500x500')
-    root.mainloop()
+    while(exit):
+        await asyncio.sleep(1)
+    # root.mainloop()
+    # asyncio.
