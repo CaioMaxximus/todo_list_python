@@ -30,8 +30,8 @@ async def save_new_task(tasks , newTask):
         await sess.commit()
         # id = newTask.get_id()
         # tasks[id] = newTask
-        print("saved")
-        print(id)
+        # print("saved")
+        # print(id)
         exit  = await get_all_tasks()
     return exit
 
@@ -40,7 +40,7 @@ async def save_new_task(tasks , newTask):
 async def remove_task(tasks,id):
     
     async with session() as sess:       
-        print("chamou o remove!!")
+        # print("chamou o remove!!")
         await sess.execute(text("delete from tasks where id= :id").bindparams(bindparam("id", id)))
         await sess.commit()
         del tasks[id]
@@ -53,18 +53,21 @@ async def get_all_tasks():
     tasks_obj = {}
 
     async with session() as sess:
-        print("chamou")
+        # print("chamou")
         stm = select(taskmodel)
         # result = await (sess.execute(stm))
         # result = result.chunked()
         # await sess.commit()
         result = await sess.scalars(stm)
-                
-        print(result)
+        # await sess.commit()
+
+        # print(result)
         for task in result:
             # print(task.__dir__())
             tasks_obj[task.id] = task
         # print(tasks_obj)
+    print("*************")
+    print(tasks_obj)
     return tasks_obj
 
 async def set_task_complete(id):

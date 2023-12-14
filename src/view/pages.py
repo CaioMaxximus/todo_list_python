@@ -104,11 +104,17 @@ class to_do_app(tk.Tk):
         self.withdraw()
         # self.wait_window(new_window)
         
-    async def set_task_complete(self, id ,button):
+    async def set_task_complete(self, id):
+        print("id ->" + id)
         await task_services.set_task_complete(id)
-        btText = button.cget("text")
-        changeTx = "o" if(btText == "O") else "O"
-        button.configure(text = changeTx)
+        # btText = button.cget("text")
+        # changeTx = "o" if(btText == "O") else "O"
+        # button.configure(text = changeTx)
+        await self.get_all_tasks()
+        
+    async def get_all_tasks(self):
+        self.tasks = await task_services.get_all_tasks()
+        self.notify()
         
         
         
@@ -201,6 +207,7 @@ class HomeP(tk.Frame):
         print("_________")
         print(tasks)
         for i , task in enumerate(tasks):
+            print(task)
             # print(task)
             columnN = (i % 2)
             paddX = (1, 10) if columnN == 0 else (10, 1)
@@ -224,16 +231,16 @@ class HomeP(tk.Frame):
             date_label = tk.Label(frame_top, text= expireDateText, bg = expireDateColor)
             date_label.grid(row=0, column=1, padx=(1,4))
             completeText = "o" if task.get_completed() else "O"
-            completeColor = "#FF2B52" if task.get_completed() else "#00D9C0"
+            completeColor = "#00D9C0"if task.get_completed() else "#FF2B52"
             complete_btn = tk.Button(frame_top , text = completeText , 
-                                     bg= completeColor , height=1, command =lambda : asyncio.create_task(self.controler.set_task_complete(task.get_id() ,complete_btn)))
+                                     bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
             complete_btn.grid(row=0 , column= 0)
             
             title_label = tk.Label(frame_task, text=task.title ,wraplength=110 )
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
              
             remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg = "red" ,  
-                                   command= lambda : (self.controler.remove_task(task.id , self.notify)))
+                                   command= lambda t=task: (self.controler.remove_task(t.id , self.notify)))
             remove_btn.grid(row = 0 , column=2)
             
             
@@ -252,10 +259,11 @@ class HomeP(tk.Frame):
     def filter_tasks_by_complete(self):
         
         method = self.variable.get()
-        print("filter_tasks")
+        # print("filter_tasks")
         # print(self.tasks)
         if(method == "ALL"):
             print("ALL")
+            print(self.tasks.values())
             self.list_tasks(self.tasks.values())
         
         else:
@@ -273,7 +281,10 @@ class HomeP(tk.Frame):
                 
     def notify(self):
         self.tasks = self.controler.get_tasks()
-        self.list_tasks(self.tasks.values())
+        print("######")
+        print(self.tasks)
+        # self.list_tasks(self.tasks.values())
+        self.filter_tasks_by_complete()
         
     
 class CreateP(tk.Frame):
