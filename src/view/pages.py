@@ -185,7 +185,7 @@ class HomeP(tk.Frame):
                                 #   bg="lightgray",height=1000,width=1000)
         # frame_task.grid()
         self.frameTasks.bind("<B1-Motion>", lambda event, frame=self.frameTasks: self.resize_frame(event, frame))
-        self.canvas.create_window((0, 0), window=self.frameTasks, anchor='nw')
+        self.canvas.create_window((0, 0), window=self.frameTasks, anchor='n')
         self.filter_tasks_by_complete()
         
     def resize_frame(self, event, frame):
@@ -347,7 +347,7 @@ exit = 1
 
 async def init(tasks):
     root = to_do_app(tasks)
-    root.geometry('500x500')
+    root.geometry('520x560')
     while(exit):
         await asyncio.sleep(1)
     # root.mainloop()

@@ -5,7 +5,8 @@ sys.path.append("repository")
 sys.path.append("services")
 sys.path.append("view")
 from services import task_services
-from view.pages import init
+from view.app import init
+# from view.pages import init
 from repository import database_definitions , async_jobs
 import asyncio
 
@@ -29,7 +30,7 @@ async def main():
     # for e in tasks.values():
     #     print(e)
     # await init(tasks)
-    await asyncio.gather(*[init(tasks), async_jobs.main()]) 
+    await asyncio.gather(*[init(tasks)]) 
 
 async def test():
     while True:
