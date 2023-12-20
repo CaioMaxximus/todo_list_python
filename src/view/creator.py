@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkcalendar import Calendar
 import asyncio
+from tkinter import messagebox
 from elements.personilized_text import personilized_text
 from elements.personilized_entry import personilized_entry
 
@@ -59,9 +60,13 @@ class Creator(tk.Frame):
         self.createTakBtn.grid(row=3,column=0)
         
     async def create_task(self):
-        title = self.titleIn.get("1.0", "end-1c")
+        title = self.titleIn.get()
         expireD = self.calendarIn.get_date()
         content = self.contentIn.get("1.0", "end-1c")
         print(title,expireD,content)
-        await self.controler.createTask(title,content,expireD)
-        self.controler.unstack()
+        try:
+            await self.controler.createTask(title,content,expireD)
+            self.controler.unstack()
+        except ValueError as err:
+            print(err)
+            messagebox.showerror("Erro", str(err))

@@ -8,6 +8,14 @@ def get_all_tasks():
 
 def add_new_task(tasks , title , content, expire_date):
    
+   
+    MIN_SIZE_TITLE = 1
+    MIN_SIZE_CONTENT = 10
+    if(len("".join(title.split(" "))) < MIN_SIZE_TITLE):
+        raise ValueError("Title must have at least one character")
+    if(len("".join(content.split(" "))) < MIN_SIZE_CONTENT):
+        raise ValueError(f"Task content must have at least more tha {(MIN_SIZE_CONTENT - 1)}  characteres")
+
     newT = task_moddel.task(completed=False,
                     title= title,
                     content=content,

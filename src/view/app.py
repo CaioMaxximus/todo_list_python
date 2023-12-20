@@ -2,6 +2,8 @@ from tkinter import ttk
 import tkinter as tk
 from tkcalendar import Calendar
 from services import task_services 
+from tkinter import messagebox
+
 import asyncio
 from .home import Home
 
@@ -14,7 +16,7 @@ class to_do_app(tk.Tk):
         
         # self.loop = asyncio.get_event_loop()
         self.destroyed = False
-        self.bind("WM_DELETE_WINDOW" , lambda t : self.setDestroyed())
+        self.protocol("WM_DELETE_WINDOW" ,self.on_close)
         self.container = tk.Canvas(self,  width=500, height=500)
         self.container.pack(side = "top", fill = "both" , expand= True)
         # self.container.grid(stick = "nswe")
@@ -32,8 +34,11 @@ class to_do_app(tk.Tk):
         self.observers = []
         self.observers.append(frame)
         asyncio.create_task(self.updater(1/120))
-            
-            
+        
+    def on_close(self):
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.setDestroyed()
+                    
     def setDestroyed(self):
         print("chamou o destroy!!")
         self.destroyed = True

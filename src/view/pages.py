@@ -340,7 +340,8 @@ class CreateP(tk.Frame):
         expireD = self.calendarIn.get_date()
         content = self.contentIn.get("1.0", "end-1c")
         print(title,expireD,content)
-        await self.controler.createTask(title,content,expireD)
+      
+            
         self.controler.unstack()
 
 exit = 1
