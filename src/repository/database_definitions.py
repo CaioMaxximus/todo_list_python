@@ -7,14 +7,9 @@ from models.task import Base as taskBase
 import asyncio
 
 
-absPath = os.path.abspath(__file__) 
-dirA = os.path.dirname(absPath)
-srcDir = os.path.abspath(os.path.join(dirA, ".." , ".."))
-dbPath = os.path.join(srcDir , "db" ,"database.db")
 # conn = sqlite3.connect(dbPath)
 # cursor = conn.cursor()
 # cursor    
-
 
 class dbConnection(object):
     
@@ -28,7 +23,7 @@ class dbConnection(object):
             await conn.run_sync(base.metadata.reflect)
             # await conn.run_sync(base.metadata.create_all)
     
-    def __init__(self):
+    def __init__(self , dbPath = ""):
         print("init_task")
         self.engine = create_async_engine("sqlite+aiosqlite:///" + dbPath, echo=True)
         # taskBase.metadata.create_all(self.engine)
@@ -36,8 +31,9 @@ class dbConnection(object):
         self.Session = sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=True)
     
     
-    def __new__(obj):
+    def __new__(obj, *args , **kwargs):
         if obj._instance == None:
+            print("criou uma sessao")
             obj._instance =  object.__new__(obj)
             # obj._instance.__init__()
 
@@ -49,7 +45,6 @@ class dbConnection(object):
     
 
 # if __name__ == "__main__":
-    
-obj1 = dbConnection()
-obj2 = dbConnection()
-print("obj são .. " ,obj1 == obj2)
+# obj1 = dbConnection(r"C:\Users\maxximus\Documents\projetos\to_do_list\db\database.db")
+# obj2 = dbConnection()
+# print("obj são .. " ,obj1 == obj2)

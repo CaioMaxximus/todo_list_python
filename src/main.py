@@ -1,11 +1,17 @@
 import sys
-from datetime import datetime
+import os
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from models.task import Base as taskBase
+import asyncio
 sys.path.append("modules")
 sys.path.append("repository")
 sys.path.append("services")
 sys.path.append("view")
 from services import task_services
 from view.app import init
+from datetime import datetime
 # from view.pages import init
 from repository import database_definitions , async_jobs
 import asyncio
@@ -22,6 +28,11 @@ import asyncio
 
 # print(get_all_tasks())
 
+absPath = os.path.abspath(__file__) 
+dirA = os.path.dirname(absPath)
+srcDir = os.path.abspath(os.path.join(dirA , ".."))
+dbPath = os.path.join(srcDir , "db" ,"database.db")
+
 async def main():
     
     tasks = await task_services.get_all_tasks()
@@ -37,11 +48,11 @@ async def test():
         await asyncio.sleep(2)
         print("oi")
 
-
-database_definitions.dbConnection()
+print(dbPath)
+database_definitions.dbConnection(dbPath)
 # asyncio.run()
 # asyncio.run(test())
-asyncio.run(main())
+# asyncio.run(main())
 # loop = asyncio.get_event_loop()
 # loop.run_forever()
 # loop.close()

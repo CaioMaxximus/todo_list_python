@@ -2,8 +2,8 @@ import tkinter as tk
 from tkcalendar import Calendar
 import asyncio
 from tkinter import messagebox
-from elements.personilized_text import personilized_text
-from elements.personilized_entry import personilized_entry
+from elements.personalized_text import PersonalizedText
+from elements.personalized_entry import PersonalizedEntry
 
 class Creator(tk.Frame):
     def __init__(self,parent, controler):
@@ -17,7 +17,7 @@ class Creator(tk.Frame):
         self.grid_rowconfigure(3,weight=1)
         self.grid_columnconfigure(0,weight=1)
         self.controler = controler
-        # self.contentIn = personilized_entry(self,placeholder = "Insert the task content...", height=8,width=35)
+        # self.contentIn = PersonilizedEntry(self,placeholder = "Insert the task content...", height=8,width=35)
         # self.grid_columnconfigure(1,weight=1)
         ##top bar
         self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid",background ="blue")
@@ -37,7 +37,7 @@ class Creator(tk.Frame):
         self.closeBtn.update()
 
         self.closeBtn.grid(row=0,column=0,pady=(self.frameTopBar.winfo_height() - self.closeBtn.winfo_height()) // 2)
-        self.titleIn = personilized_entry( self.frameTopBar,bg="gray",placeholder = "Insert a title for the task",)
+        self.titleIn = PersonalizedEntry( self.frameTopBar,bg="gray",placeholder = "Insert a title for the task",)
         # self.titleIn.update()
         self.titleIn.grid(row = 0, column=1,sticky="we")
         ##Calendar
@@ -52,7 +52,7 @@ class Creator(tk.Frame):
         self.calendarIn.grid(row = 1)
          ##Content area
         
-        self.contentIn = personilized_text(self,placeholder = "Insert the task content...", height=8,width=35)
+        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...", height=8,width=35)
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
