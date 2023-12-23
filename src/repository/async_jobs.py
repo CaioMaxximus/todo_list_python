@@ -7,7 +7,8 @@ from sqlalchemy import select , text , bindparam , insert
 import schedule
 
 session = dbConnection().getSession()
-print("session -> " + str(session))
+# print("session -> " + str(session))
+print("async jobs")
 
 async def verify_expired_tasks():
     

@@ -23,12 +23,12 @@ class DBConnection(object):
             
     
     def __init__(self , value):
+        print("init")
         self.value = value
-    
-    
+        print("setou o valor")
     
     def __new__(obj , *args, **kwargs):
-        print("call")
+        print("new")
 
         if obj._instance == None:
             print(obj._instance)
@@ -39,6 +39,11 @@ class DBConnection(object):
     
     def getSession(self):
         return self.Session
+    
+    def getValue():
+        return DBConnection.value
+    
+
         
     
 
@@ -49,3 +54,4 @@ obj2 = DBConnection(4)
 print("obj são .. " ,id(obj1) == id(obj2))
 print(obj1.value)
 print(obj2.value)
+print(DBConnection.getValue())

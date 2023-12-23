@@ -12,15 +12,13 @@ from sqlalchemy import select , text , bindparam , insert
 # from sqlalchemy.future import select
 
 
-dataPath = "C:\\Users\\caios\\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\db\\data.json"
+# dataPath = "C:\\Users\\caios\\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\db\\data.json"
 
-session = dbConnection().getSession()
+print("repository")
 
-async def save_new_task(tasks , newTask):
+async def save_new_task(newTask):
     # newTask.set_id(id)
-    
-  
-    
+    session = dbConnection().getSession()
     async with session() as sess:
 
         stm = insert(taskmodel).values(title = newTask.title,
@@ -30,40 +28,32 @@ async def save_new_task(tasks , newTask):
                                        expired = newTask.expired)
         await sess.execute(stm)
         await sess.commit()
-        # id = newTask.get_id()
-        # tasks[id] = newTask
-        # print("saved")
-        # print(id)
-        exit  = await get_all_tasks()
-    return exit
+    return 
 
 
 
-async def remove_task(tasks,id):
-    
+async def remove_task(id):
+
+    session = dbConnection().getSession()
+
     async with session() as sess:       
         # print("chamou o remove!!")
         await sess.execute(text("delete from tasks where id= :id").bindparams(bindparam("id", id)))
         await sess.commit()
-        del tasks[id]
 
-    return tasks
+    return 
 
 
 async def get_all_tasks():
     # tasks = load_json_file()
+    session = dbConnection().getSession()
+
     tasks_obj = {}
 
     async with session() as sess:
         # print("chamou")
         stm = select(taskmodel)
-        # result = await (sess.execute(stm))
-        # result = result.chunked()
-        # await sess.commit()
         result = await sess.scalars(stm)
-        # await sess.commit()
-
-        # print(result)
         for task in result:
             # print(task.__dir__())
             tasks_obj[task.id] = task
@@ -73,6 +63,9 @@ async def get_all_tasks():
     return tasks_obj
 
 async def set_task_complete(id):
+
+    session = dbConnection().getSession()
+
     print(id)
     async with session() as sess:
         await sess.execute(text("update tasks set completed = not completed where id = :id").bindparams(bindparam("id", id)))

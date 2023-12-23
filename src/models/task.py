@@ -23,8 +23,8 @@ class task(Base):
     expire_date = Column(Date)
     expired = Column(Boolean)
     
-    def __init__(self, id ,title , content,expire_date,completed =  False):
-        self.id = id
+    def __init__(self,title , content,expire_date,completed =  False):
+        # self.id = id
         self.title = title
         self.content = content
         self.completed = completed

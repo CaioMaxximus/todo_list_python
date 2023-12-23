@@ -7,10 +7,6 @@ from models.task import Base as taskBase
 import asyncio
 
 
-# conn = sqlite3.connect(dbPath)
-# cursor = conn.cursor()
-# cursor    
-
 class dbConnection(object):
     
     _instance = None
@@ -20,15 +16,15 @@ class dbConnection(object):
     async def init_models(self,base):
         async with self.engine.begin() as conn:
             # await conn.run_sync(base.metadata.drop_all)
-            await conn.run_sync(base.metadata.reflect)
-            # await conn.run_sync(base.metadata.create_all)
+            try:
+                await conn.run_sync(base.metadata.reflect)
+
+            except:
+                await conn.run_sync(base.metadata.create_all)
+            print("Tabelas refletidas:", base.metadata.tables.keys())
+
     
-    def __init__(self , dbPath = ""):
-        print("init_task")
-        self.engine = create_async_engine("sqlite+aiosqlite:///" + dbPath, echo=True)
-        # taskBase.metadata.create_all(self.engine)
-        asyncio.run(self.init_models(taskBase))
-        self.Session = sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=True)
+    # def __init__(self ), 
     
     
     def __new__(obj, *args , **kwargs):
@@ -39,10 +35,17 @@ class dbConnection(object):
 
         return obj._instance
     
+    def setConection(self , dbPath = ""):
+        # print("-------------")
+        # print("init_task")
+        self.engine = create_async_engine("sqlite+aiosqlite:///" + dbPath, echo=False)
+        # taskBase.metadata.create_all(self.engine)
+        asyncio.run(self.init_models(taskBase))
+        self.Session = sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=False)
+    
     def getSession(self):
         return self.Session
-        
-    
+
 
 # if __name__ == "__main__":
 # obj1 = dbConnection(r"C:\Users\maxximus\Documents\projetos\to_do_list\db\database.db")

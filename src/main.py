@@ -5,15 +5,19 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from models.task import Base as taskBase
 import asyncio
+from repository import database_definitions
+
 sys.path.append("modules")
 sys.path.append("repository")
 sys.path.append("services")
 sys.path.append("view")
+print("main")
+
+from repository import async_jobs
 from services import task_services
 from view.app import init
 from datetime import datetime
 # from view.pages import init
-from repository import database_definitions , async_jobs
 import asyncio
 
 
@@ -27,11 +31,6 @@ import asyncio
 #     print("Task number " + str(i))
 
 # print(get_all_tasks())
-
-absPath = os.path.abspath(__file__) 
-dirA = os.path.dirname(absPath)
-srcDir = os.path.abspath(os.path.join(dirA , ".."))
-dbPath = os.path.join(srcDir , "db" ,"database.db")
 
 async def main():
     
@@ -48,11 +47,15 @@ async def test():
         await asyncio.sleep(2)
         print("oi")
 
+absPath = os.path.abspath(__file__) 
+dirA = os.path.dirname(absPath)
+srcDir = os.path.abspath(os.path.join(dirA , ".."))
+dbPath = os.path.join(srcDir , "db" ,"database.db")
 print(dbPath)
-database_definitions.dbConnection(dbPath)
+database_definitions.dbConnection().setConection(dbPath)
 # asyncio.run()
 # asyncio.run(test())
-# asyncio.run(main())
+asyncio.run(main())
 # loop = asyncio.get_event_loop()
 # loop.run_forever()
 # loop.close()
