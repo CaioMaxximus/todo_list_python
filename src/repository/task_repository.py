@@ -2,17 +2,10 @@
     Execute the files saving and changing
 
 """""
-import json
 from models.task import task as taskmodel
-import random
-import string
 from datetime import datetime
 from .database_definitions import dbConnection
 from sqlalchemy import select , text , bindparam , insert
-# from sqlalchemy.future import select
-
-
-# dataPath = "C:\\Users\\caios\\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\db\\data.json"
 
 print("repository")
 
@@ -53,13 +46,14 @@ async def get_all_tasks():
     async with session() as sess:
         # print("chamou")
         stm = select(taskmodel)
+        # stm = text("select * from tasks")
         result = await sess.scalars(stm)
         for task in result:
             # print(task.__dir__())
             tasks_obj[task.id] = task
         # print(tasks_obj)
-    print("*************")
-    print(tasks_obj)
+    # print("*************")
+    # print(tasks_obj)
     return tasks_obj
 
 async def set_task_complete(id):
@@ -71,6 +65,11 @@ async def set_task_complete(id):
         await sess.execute(text("update tasks set completed = not completed where id = :id").bindparams(bindparam("id", id)))
         await sess.commit()
 
+async def clear_database():
+    session = dbConnection().getSession()
+    async with session() as sess:
+        await sess.execute(text("delete from tasks"))
+        await sess.commit()
 
 # async def get_all_tasks_expired():
     

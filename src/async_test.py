@@ -10,7 +10,8 @@ async def run_schedules():
         print("laco2")
 
 async def main():
-    task1 = asyncio.create_task(run_schedules())
+    # task1 = asyncio.create_task(run_schedules())
+    await run_schedules()
     # await task1  # Aguarda a conclusão da tarefa run_schedules
 
     while True:
@@ -19,4 +20,7 @@ async def main():
 
 
 # Executando o loop principal
-asyncio.run(main())
+# asyncio.run(main())
+cor = asyncio.coroutine(main)
+loop = asyncio.get_event_loop()
+loop.run_until_complete(cor)

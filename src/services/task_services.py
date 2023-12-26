@@ -6,7 +6,7 @@ def get_all_tasks():
     print("get all tasks")
     return task_repository.get_all_tasks()
 
-def add_new_task(tasks , title , content, expire_date):
+async def add_new_task(tasks , title , content, expire_date):
    
    
     MIN_SIZE_TITLE = 1
@@ -21,14 +21,14 @@ def add_new_task(tasks , title , content, expire_date):
                     content=content,
                     expire_date= datetime.strptime(expire_date, '%m-%d-%Y').date(),
                 )
-    task_repository.save_new_task(newT)
-    tasks = task_repository.get_all_tasks()
+    await task_repository.save_new_task(newT)
+    tasks = await task_repository.get_all_tasks()
     return tasks
 
-def remove_task_by_id(id):
+async def remove_task_by_id(id):
     # print(tasks)
-    task_repository.remove_task(id)
-    return task_repository.get_all_tasks()
+    await task_repository.remove_task(id)
+    return await task_repository.get_all_tasks()
     
 def set_task_complete(id):
     return task_repository.set_task_complete(id)

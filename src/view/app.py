@@ -33,7 +33,7 @@ class to_do_app(tk.Tk):
         frame.tkraise()
         self.observers = []
         self.observers.append(frame)
-        asyncio.create_task(self.updater(1/120))
+        # asyncio.create_task(self.updater(1/120))
         
     def on_close(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
@@ -82,7 +82,7 @@ class to_do_app(tk.Tk):
         # print(task_id)
         # print(self.tasks[task_id])
         print("removi tudo!")
-        self.tasks = await task_services.remove_task_by_id(self.tasks , task_id)
+        self.tasks = await task_services.remove_task_by_id(task_id)
         # self.deiconify()
         callback()
         new_window.destroy()  
@@ -137,11 +137,13 @@ exit = 1
 
 async def init(tasks):
     root = to_do_app(tasks)
+    print("root criado")
     root.geometry('520x560')
     root.minsize(520, 540) 
     root.maxsize(530, 570)
-    while(exit):
-        await asyncio.sleep(1)
+    await root.updater(1/120)
+    # while(exit):
+    #     await asyncio.sleep(1)
     print("init ended")
     # root.mainloop()
     # asyncio.

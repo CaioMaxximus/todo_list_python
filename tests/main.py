@@ -1,18 +1,20 @@
 import os
 import sys
+import unittest
 
-# print(sys.path)
 absPath = os.path.abspath(__file__) 
 dirA = os.path.dirname(absPath)
-# dbTestPath = os.path.join(absPath ,"databaseTest.db")
 srcPath = os.path.join(os.path.dirname(dirA),"src" )
 sys.path.append(srcPath)
-print(sys.path)
 
 import env_config
-import repository_test
+from repository_test import TestRepository
 
 
 
-env_config.main()
-repository_test.main()
+if __name__ == '__main__':
+    env_config.main()
+    # repository_test.main()
+    test_suite = unittest.TestLoader().loadTestsFromTestCase(TestRepository)  
+    # Execute os testes
+    unittest.TextTestRunner(verbosity=2).run(test_suite)

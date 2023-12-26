@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String , Boolean , Date
+from sqlalchemy import Column, String , Boolean , Date
 from sqlalchemy.ext.declarative import declarative_base
 import string
 import random
@@ -32,8 +32,6 @@ class task(Base):
         self.expired = False
         self.id = generate_id()
 
-        
-        
     def get_id(self):
         return self.id  
         

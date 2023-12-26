@@ -1,5 +1,7 @@
 import os
 import sys
+import asyncio
+from models.task import Base as taskBase
 
 # print(sys.path)
 absPath = os.path.abspath(__file__) 
@@ -13,10 +15,10 @@ from repository import database_definitions
 
 
 
-def create_test_database(path):
+async def create_test_database(path):
     print(f"Creating test data base in {path} ...")
-    database_definitions.dbConnection().setConection(path)
+    await database_definitions.dbConnection().setConection([taskBase] , path)
     print("Test data base created!")
 
 def main():
-    create_test_database(dbTestPath)
+    asyncio.run(create_test_database(dbTestPath))

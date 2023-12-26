@@ -4,6 +4,10 @@ import asyncio
 from tkinter import messagebox
 from elements.personalized_text import PersonalizedText
 from elements.personalized_entry import PersonalizedEntry
+# from icons import arrow-turn-down-left.svg
+
+
+crossIcon = r"C:\Users\maxximus\Documents\projetos\to_do_list\assets\icons\arrow-turn-down-left.png"
 
 class Creator(tk.Frame):
     def __init__(self,parent, controler):
@@ -20,16 +24,16 @@ class Creator(tk.Frame):
         # self.contentIn = PersonilizedEntry(self,placeholder = "Insert the task content...", height=8,width=35)
         # self.grid_columnconfigure(1,weight=1)
         ##top bar
-        self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid",background ="blue")
+        self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid")
         self.frameTopBar.grid(row= 0,column=0,sticky ="nsew")
         self.frameTopBar.grid_columnconfigure(0,weight=1)
         self.frameTopBar.grid_columnconfigure(1,weight=8)
         self.frameTopBar.grid_columnconfigure(3,weight=1)
         # self.frameTopBar.grid_columnconfigure(2,weight=5) 
         ##Title creation
-        
-        self.closeBtn = tk.Button( self.frameTopBar,text="X",command= self.controler.unstack ,bg="red",
-                                  height=2 ,width=3)
+        self.closeIcon= tk.PhotoImage(file=crossIcon).subsample(6, 6)
+        self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,bg="red",
+                                  height=40 ,width=40,borderwidth=0)
         print("----")
         self.controler.update()
         self.update()
@@ -56,7 +60,9 @@ class Creator(tk.Frame):
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
-        self.createTakBtn = tk.Button( self,text="Create Task",command= lambda : asyncio.create_task(self.create_task()))
+        self.createTakBtn = tk.Button( self,text="Create Task",
+                                      command= lambda : asyncio.create_task(self.create_task()),
+                                      height = 3)
         self.createTakBtn.grid(row=3,column=0)
         
     async def create_task(self):
