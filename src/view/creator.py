@@ -4,15 +4,15 @@ import asyncio
 from tkinter import messagebox
 from elements.personalized_text import PersonalizedText
 from elements.personalized_entry import PersonalizedEntry
+from .Themes import Themes
 # from icons import arrow-turn-down-left.svg
+Theme = Themes("")
 
-
-crossIcon = r"C:\Users\maxximus\Documents\projetos\to_do_list\assets\icons\arrow-turn-down-left.png"
 
 class Creator(tk.Frame):
     def __init__(self,parent, controler):
         
-        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg="white")
+        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg=Theme.get_color("big_background"))
         # self.pack(side = "top", fill = "both" , expand= True)
         self.grid(row=0,column=0, sticky ="nsew")
         self.grid_rowconfigure(0,weight=1)
@@ -24,15 +24,15 @@ class Creator(tk.Frame):
         # self.contentIn = PersonilizedEntry(self,placeholder = "Insert the task content...", height=8,width=35)
         # self.grid_columnconfigure(1,weight=1)
         ##top bar
-        self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid")
+        self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid", bg = Theme.get_color("big_background"))
         self.frameTopBar.grid(row= 0,column=0,sticky ="nsew")
         self.frameTopBar.grid_columnconfigure(0,weight=1)
         self.frameTopBar.grid_columnconfigure(1,weight=8)
         self.frameTopBar.grid_columnconfigure(3,weight=1)
         # self.frameTopBar.grid_columnconfigure(2,weight=5) 
         ##Title creation
-        self.closeIcon= tk.PhotoImage(file=crossIcon).subsample(6, 6)
-        self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,bg="red",
+        self.closeIcon= tk.PhotoImage(file=Theme.get_icon("back_arrow")).subsample(6, 6)
+        self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,bg=Theme.get_color("element_1"),
                                   height=40 ,width=40,borderwidth=0)
         print("----")
         self.controler.update()
@@ -62,7 +62,7 @@ class Creator(tk.Frame):
         ##Button to create
         self.createTakBtn = tk.Button( self,text="Create Task",
                                       command= lambda : asyncio.create_task(self.create_task()),
-                                      height = 3)
+                                      height = 3 , bg = Theme.get_color("element_1"))
         self.createTakBtn.grid(row=3,column=0)
         
     async def create_task(self):

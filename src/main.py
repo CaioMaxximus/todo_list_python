@@ -21,9 +21,12 @@ print(sys.path)
 from repository import async_jobs
 from services import task_services
 from view.app import init
+from view.Themes import Themes
 # from view.pages import init
 import asyncio
 
+
+Themes("synthwave")
 
 
 # tasks = {}

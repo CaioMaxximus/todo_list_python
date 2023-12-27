@@ -52,4 +52,5 @@ class dbConnection(object):
 # if __name__ == "__main__":
 obj1 = dbConnection()
 obj2 = dbConnection()
+print(obj1)
 print("obj são .. " ,obj1 == obj2)

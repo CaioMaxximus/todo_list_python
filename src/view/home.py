@@ -2,10 +2,13 @@ from tkinter import ttk
 import tkinter as tk
 import asyncio
 from .creator import Creator
+from .Themes import Themes
+# from icons import arrow-turn-down-left.svg
+Theme = Themes("")
 
 class Home(tk.Frame):
     def __init__(self,parent, controler,tasks):
-        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg="gray")
+        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg=Theme.get_color("big_background"))
         # self.pack(side = "top", fill = "both" , expand= True)
         self.tasks = tasks
         self.controler = controler
@@ -15,7 +18,7 @@ class Home(tk.Frame):
         self.grid_columnconfigure(0,weight=1)
         
         ##Top  bar
-        self.frameTopBar = tk.Frame(self,borderwidth=2, relief="solid",background ="white")
+        self.frameTopBar = tk.Frame(self,borderwidth=0, relief="solid",background =Theme.get_color("big_background"))
         self.frameTopBar.grid(row= 0,column=0,sticky="ew")
         
         self.frameTopBar.grid_columnconfigure(0,weight=1)
@@ -50,7 +53,7 @@ class Home(tk.Frame):
         self.downFrame.grid_columnconfigure(0,weight=10)
         self.downFrame.grid_columnconfigure(1,weight=2)
 
-        self.canvas = tk.Canvas(self.downFrame,bg="white")
+        self.canvas = tk.Canvas(self.downFrame,bg=Theme.get_color("big_background"))
         self.canvas.grid(row=0, column=0, sticky="nsew")
         self.canvas.rowconfigure(0, weight=1)
         self.canvas.columnconfigure(0, weight=1)
@@ -60,9 +63,9 @@ class Home(tk.Frame):
         self.canvas.config(yscrollcommand = self.scroll_bar.set)
         
         #Frames list
-        self.frameTasks = tk.Frame(self.canvas,borderwidth=2, relief="solid",
+        self.frameTasks = tk.Frame(self.canvas,borderwidth=1, relief="solid",
                                    width=470, 
-                                   height=420)
+                                   height=420,bg =  Theme.get_color("element_2"))
         # self.frameTasks.grid(row = 0 ,column=0,sticky= 'ew')
         self.frameTasks.grid_columnconfigure(0, weight=10)
         self.frameTasks.grid_columnconfigure(1, weight=10)
@@ -103,7 +106,7 @@ class Home(tk.Frame):
             expireDate = task.get_expire_date()
             expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
             expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
-            frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid",
+            frame_task = tk.Frame(self.frameTasks,borderwidth=1, relief="solid"
                                   )
             frame_task.grid(row = (row_counter // 2) , column = columnN,padx=paddX,pady=5)
             frame_task.rowconfigure(0, weight=1)
