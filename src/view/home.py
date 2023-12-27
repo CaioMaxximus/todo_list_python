@@ -8,7 +8,7 @@ Theme = Themes("")
 
 class Home(tk.Frame):
     def __init__(self,parent, controler,tasks):
-        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg=Theme.get_color("big_background"))
+        tk.Frame.__init__(self , parent,borderwidth=2, relief="solid", bg=Theme.get_color("big_background_darker"))
         # self.pack(side = "top", fill = "both" , expand= True)
         self.tasks = tasks
         self.controler = controler
@@ -18,7 +18,7 @@ class Home(tk.Frame):
         self.grid_columnconfigure(0,weight=1)
         
         ##Top  bar
-        self.frameTopBar = tk.Frame(self,borderwidth=0, relief="solid",background =Theme.get_color("big_background"))
+        self.frameTopBar = tk.Frame(self,borderwidth=0, relief="solid",background =Theme.get_color("big_background_darker"))
         self.frameTopBar.grid(row= 0,column=0,sticky="ew")
         
         self.frameTopBar.grid_columnconfigure(0,weight=1)
@@ -47,25 +47,27 @@ class Home(tk.Frame):
                                   , width = 5,height=3)
         buttonCreateT.grid(row=0 ,column=2)
         
-        self.downFrame = tk.Frame(self, bg = "white")
+        self.downFrame = tk.Frame(self,bg = Theme.get_color("big_background_darker"),
+                                  borderwidth=0)
         self.downFrame.grid(row=1,column=0,sticky="nsew")
         self.downFrame.grid_rowconfigure(0,weight = 1)
         self.downFrame.grid_columnconfigure(0,weight=10)
         self.downFrame.grid_columnconfigure(1,weight=2)
 
-        self.canvas = tk.Canvas(self.downFrame,bg=Theme.get_color("big_background"))
+        self.canvas = tk.Canvas(self.downFrame,bg=Theme.get_color("big_background_darker"))
         self.canvas.grid(row=0, column=0, sticky="nsew")
         self.canvas.rowconfigure(0, weight=1)
         self.canvas.columnconfigure(0, weight=1)
 
-        self.scroll_bar = ttk.Scrollbar(self.downFrame, orient="vertical", command = self.canvas.yview)
+        self.scroll_bar = ttk.Scrollbar(self.downFrame, 
+                                        orient="vertical", command = self.canvas.yview)
         self.scroll_bar.grid(row=0, column=1, sticky='ns')
         self.canvas.config(yscrollcommand = self.scroll_bar.set)
         
         #Frames list
-        self.frameTasks = tk.Frame(self.canvas,borderwidth=1, relief="solid",
+        self.frameTasks = tk.Frame(self.canvas,borderwidth=2,
                                    width=470, 
-                                   height=420,bg =  Theme.get_color("element_2"))
+                                   height=420,bg =  Theme.get_color("big_background"))
         # self.frameTasks.grid(row = 0 ,column=0,sticky= 'ew')
         self.frameTasks.grid_columnconfigure(0, weight=10)
         self.frameTasks.grid_columnconfigure(1, weight=10)
@@ -106,7 +108,7 @@ class Home(tk.Frame):
             expireDate = task.get_expire_date()
             expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
             expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
-            frame_task = tk.Frame(self.frameTasks,borderwidth=1, relief="solid"
+            frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid"
                                   )
             frame_task.grid(row = (row_counter // 2) , column = columnN,padx=paddX,pady=5)
             frame_task.rowconfigure(0, weight=1)
@@ -123,7 +125,7 @@ class Home(tk.Frame):
             date_label = tk.Label(frame_top, text= expireDateText, bg = expireDateColor)
             date_label.grid(row=0, column=1, padx=(1,4))
             completeText = "o" if task.get_completed() else "O"
-            completeColor = "#00D9C0"if task.get_completed() else "#FF2B52"
+            completeColor =  Theme.get_color("correct") if task.get_completed() else  Theme.get_color("error")
             complete_btn = tk.Button(frame_top , text = completeText , 
                                      bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
             complete_btn.grid(row=0 , column= 0)
@@ -136,7 +138,7 @@ class Home(tk.Frame):
             remove_btn.grid(row = 0 , column=2)
             
             contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 
-            content_label = tk.Label(frame_task, text=task.content, width=29, height=20,wraplength=120 , bg= contentColor)
+            content_label = tk.Label(frame_task, text=task.content, width=31, height=20,wraplength=120 , bg= completeColor)
             content_label.grid(row=2, column=0)
             row_counter += 1
             

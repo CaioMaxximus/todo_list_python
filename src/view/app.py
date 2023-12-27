@@ -3,9 +3,12 @@ import tkinter as tk
 from tkcalendar import Calendar
 from services import task_services 
 from tkinter import messagebox
+from .Themes import Themes
 
 import asyncio
 from .home import Home
+
+Theme = Themes("")
 
 class to_do_app(tk.Tk):
     
@@ -95,7 +98,7 @@ class to_do_app(tk.Tk):
         def close_window(event):
             self.deiconify()
             
-        frame = tk.Frame(new_window,bg  = "white")
+        frame = tk.Frame(new_window, bg = Theme.get_color("big_background_lighter"))
         frame.pack(side = "top", fill = "both" , expand= True)
         frame.rowconfigure(0,weight=1)
         frame.rowconfigure(1,weight=3)
@@ -106,17 +109,19 @@ class to_do_app(tk.Tk):
         message = tk.Label(top_frame, text = f"remove '{task}' permanently?")
         message.grid(row=0,column=0,padx=10,pady=5)
         
-        bottow_frame = tk.Frame(frame)
+        bottow_frame = tk.Frame(frame , bg = Theme.get_color("big_background_lighter"))
         bottow_frame.grid(row= 1,column=0)
         bottow_frame.grid_columnconfigure(0,weight=1)
         bottow_frame.grid_columnconfigure(1,weight=1)        
             
-        cancel_btn = tk.Button(bottow_frame, text="CANCEL" , command = new_window.destroy)
+        cancel_btn = tk.Button(bottow_frame, bg = Theme.get_color("correct"), text="CANCEL" , command = new_window.destroy)
         cancel_btn.grid(row=0, column=0,padx=(1,10))
-        remove_btn = tk.Button(bottow_frame, text="REMOVE", bg="red", command =lambda : asyncio.create_task(self.remove_task_confirmed(new_window , callback , task)))
+        remove_btn = tk.Button(bottow_frame, text="REMOVE", bg=Theme.get_color("error"), command =lambda : asyncio.create_task(self.remove_task_confirmed(new_window , callback , task)))
         remove_btn.grid(row=0,column=1 , padx=(10,1))
         new_window.bind("<Destroy>", lambda event: close_window(event))
         new_window.geometry('250x150')
+        new_window.minsize(245, 140) 
+        new_window.maxsize(265, 160)
         self.withdraw()
         # self.wait_window(new_window)
         

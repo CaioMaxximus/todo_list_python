@@ -9,7 +9,9 @@ class Themes(object):
             'big_background_lighter' : "#ce05db",
             'big_background_darker' : '#6c01a2',
             'element_1': '#f7aa21',
-            "element_2" : "#f67a27"
+            "element_2" : "#f67a27",
+            "correct" : "#76C929",
+            "error" : "#FF4218"
 
         }
     }
