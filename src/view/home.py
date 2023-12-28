@@ -130,7 +130,7 @@ class Home(tk.Frame):
                                      bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
             complete_btn.grid(row=0 , column= 0)
             
-            title_label = tk.Label(frame_task, text=task.title ,wraplength=110 )
+            title_label = tk.Label(frame_task, text=task.title ,wraplength=170 , height=2)
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
              
             remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg = "red" ,  

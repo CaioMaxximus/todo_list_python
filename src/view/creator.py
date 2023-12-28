@@ -41,7 +41,9 @@ class Creator(tk.Frame):
         self.closeBtn.update()
 
         self.closeBtn.grid(row=0,column=0,pady=(self.frameTopBar.winfo_height() - self.closeBtn.winfo_height()) // 2)
-        self.titleIn = PersonalizedEntry( self.frameTopBar,bg="gray",placeholder = "Insert a title for the task",)
+        self.titleIn = PersonalizedEntry( self.frameTopBar,bg="gray",
+                                         placeholder = "Insert a title for the task",
+                                         font=('Arial 16'))
         # self.titleIn.update()
         self.titleIn.grid(row = 0, column=1,sticky="we")
         ##Calendar
@@ -49,20 +51,21 @@ class Creator(tk.Frame):
         self.calendar_area = tk.Frame(self)
         self.calendar_area.grid(row=1,column=0)
         
-        self.calendar_label = tk.Label(self.calendar_area, text= "Expire Date:")
-        self.calendar_label.grid(row=0 , column=0,pady=(1,15))
+        self.calendar_label = tk.Label(self.calendar_area, text= "Expire Date:" ,  font=('GOOD TIMES', 14))
+        self.calendar_label.grid(row=0 , column=0,pady=(1,8))
         self.calendarIn= Calendar(self.calendar_area,year = 2020, month = 5,
                day = 22,date_pattern = 'mm-dd-yyyy')
         self.calendarIn.grid(row = 1)
          ##Content area
         
-        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...", height=8,width=35)
+        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...",  font=('COPPERPLATE GOTHIC BOLD', 12) ,
+                                          height=8,width=35)
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
-        self.createTakBtn = tk.Button( self,text="Create Task",
+        self.createTakBtn = tk.Button( self,text="Create Task", font=('Arial 10'),
                                       command= lambda : asyncio.create_task(self.create_task()),
-                                      height = 3 , bg = Theme.get_color("element_1"))
+                                      height = 2 , bg = Theme.get_color("element_1"))
         self.createTakBtn.grid(row=3,column=0)
         
     async def create_task(self):
