@@ -30,6 +30,7 @@ class PersonalizedText(tk.Text):
     def on_focus_out(self, event):
         if self.get("1.0" , "end").replace("\n" , "") == "":
             self.insert("1.0", self.placeholder)
+            self.config(bg = self.bg)
             self.config(fg=self.placeholder_color)
             self.empty = True
 

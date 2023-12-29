@@ -32,7 +32,8 @@ class Creator(tk.Frame):
         # self.frameTopBar.grid_columnconfigure(2,weight=5) 
         ##Title creation
         self.closeIcon= tk.PhotoImage(file=Theme.get_icon("back_arrow")).subsample(6, 6)
-        self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,bg=Theme.get_color("element_1"),
+        self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,
+                                  bg=Theme.get_color("element_1"),
                                   height=40 ,width=40,borderwidth=0)
         print("----")
         self.controler.update()
@@ -48,10 +49,12 @@ class Creator(tk.Frame):
         self.titleIn.grid(row = 0, column=1,sticky="we")
         ##Calendar
         
-        self.calendar_area = tk.Frame(self)
+        self.calendar_area = tk.Frame(self,bg = Theme.get_color("big_background"))
         self.calendar_area.grid(row=1,column=0)
         
-        self.calendar_label = tk.Label(self.calendar_area, text= "Expire Date:" ,  font=('GOOD TIMES', 14))
+        self.calendar_label = tk.Label(self.calendar_area, text= "Expire Date:" , 
+                                        font=('GOOD TIMES', 14),
+                                        bg = Theme.get_color("element_1"))
         self.calendar_label.grid(row=0 , column=0,pady=(1,8))
         self.calendarIn= Calendar(self.calendar_area,year = 2020, month = 5,
                day = 22,date_pattern = 'mm-dd-yyyy')
@@ -59,13 +62,13 @@ class Creator(tk.Frame):
          ##Content area
         
         self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...",  font=('COPPERPLATE GOTHIC BOLD', 12) ,
-                                          height=8,width=35)
+                                          height=8,width=35,bg = "gray")
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
-        self.createTakBtn = tk.Button( self,text="Create Task", font=('Arial 10'),
-                                      command= lambda : asyncio.create_task(self.create_task()),
-                                      height = 2 , bg = Theme.get_color("element_1"))
+        self.createTakBtn = tk.Button( self,text="Create Task", command= lambda : asyncio.create_task(self.create_task()),
+                                        font=('COPPERPLATE GOTHIC BOLD', 9),
+                                      height = 3 , bg = Theme.get_color("element_1"))
         self.createTakBtn.grid(row=3,column=0)
         
     async def create_task(self):

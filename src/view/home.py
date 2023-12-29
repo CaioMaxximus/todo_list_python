@@ -36,7 +36,8 @@ class Home(tk.Frame):
         ##delayin button creation on the top bar
         ##Creation Button
         
-        buttonFilter = ttk.Button(self.frameTopBar,text="Filter",command= self.filter_tasks_by_complete)
+        buttonFilter = tk.Button(self.frameTopBar,text="Filter",bg =  Theme.get_color("element_1"),
+                                  command= self.filter_tasks_by_complete)
         buttonFilter.grid(row=0 ,column=1)
         # button.pack()
         
@@ -44,7 +45,7 @@ class Home(tk.Frame):
         
         buttonCreateT = tk.Button(self.frameTopBar,text="+",
                                   command= lambda : controler.stack_page(Creator)
-                                  , width = 5,height=3)
+                                  , width = 5,height=3,bg =  Theme.get_color("element_1"))
         buttonCreateT.grid(row=0 ,column=2)
         
         self.downFrame = tk.Frame(self,bg = Theme.get_color("big_background_darker"),
@@ -67,7 +68,7 @@ class Home(tk.Frame):
         #Frames list
         self.frameTasks = tk.Frame(self.canvas,borderwidth=2,
                                    width=470, 
-                                   height=420,bg =  Theme.get_color("big_background"))
+                                   height=420,bg =  Theme.get_color("big_background_darker"))
         # self.frameTasks.grid(row = 0 ,column=0,sticky= 'ew')
         self.frameTasks.grid_columnconfigure(0, weight=10)
         self.frameTasks.grid_columnconfigure(1, weight=10)
@@ -108,14 +109,16 @@ class Home(tk.Frame):
             expireDate = task.get_expire_date()
             expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
             expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
+            completeText = "o" if task.get_completed() else "O"
+            completeColor =  Theme.get_color("correct") if task.get_completed() else  Theme.get_color("error")
             frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid"
-                                  )
+                                 , bg = completeColor )
             frame_task.grid(row = (row_counter // 2) , column = columnN,padx=paddX,pady=5)
             frame_task.rowconfigure(0, weight=1)
             frame_task.rowconfigure(1, weight=1)
             frame_task.rowconfigure(2, weight=10)
             
-            frame_top = tk.Frame(frame_task)
+            frame_top = tk.Frame(frame_task ,bg = completeColor)
             frame_top.grid(stick = "ew")
             frame_top.grid_columnconfigure(0,weight = 1)
             frame_top.grid_columnconfigure(1,weight = 3)
@@ -124,21 +127,22 @@ class Home(tk.Frame):
             
             date_label = tk.Label(frame_top, text= expireDateText, bg = expireDateColor)
             date_label.grid(row=0, column=1, padx=(1,4))
-            completeText = "o" if task.get_completed() else "O"
-            completeColor =  Theme.get_color("correct") if task.get_completed() else  Theme.get_color("error")
-            complete_btn = tk.Button(frame_top , text = completeText , 
-                                     bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
+            
+            complete_btn = tk.Button(frame_top , text = completeText , border= 2
+                                     ,bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
             complete_btn.grid(row=0 , column= 0)
             
-            title_label = tk.Label(frame_task, text=task.title ,wraplength=170 , height=2)
+            title_label = tk.Label(frame_task, text=task.title ,wraplength=170 , height=2 ,bg = completeColor)
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
              
-            remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg = "red" ,  
+            remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg =  Theme.get_color("element_1") ,  
                                    command= lambda t=task: (self.controler.remove_task(t.id , self.notify)))
             remove_btn.grid(row = 0 , column=2)
             
             contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 
-            content_label = tk.Label(frame_task, text=task.content, width=31, height=20,wraplength=120 , bg= completeColor)
+            content_label = tk.Label(frame_task, text=task.content, width=31, height=20,wraplength=170 ,
+                                      bg=  Theme.get_color("big_background_lighter") ,
+                                     fg = Theme.get_color("font_1"),anchor="n" )
             content_label.grid(row=2, column=0)
             row_counter += 1
             

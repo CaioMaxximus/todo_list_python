@@ -11,7 +11,19 @@ class Themes(object):
             'element_1': '#f7aa21',
             "element_2" : "#f67a27",
             "correct" : "#76C929",
-            "error" : "#FF4218"
+            "error" : "#FF4218",
+            "font_1" : "white"
+
+        },
+        'synthwave2':{
+            'big_background': "#3C1C64",
+            'big_background_lighter' : "#632E80",
+            'big_background_darker' : '#150947',
+            'element_1': '#FCCC2A',
+            "element_2" : "#F87E3E",
+            "correct" : "#4AD30F",
+            "error" : "#DF1025",
+            "font_1" : "white"
 
         }
     }

@@ -26,7 +26,7 @@ from view.Themes import Themes
 import asyncio
 
 
-Themes("synthwave")
+Themes("synthwave2")
 
 
 # tasks = {}
