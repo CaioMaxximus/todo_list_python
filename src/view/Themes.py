@@ -41,7 +41,12 @@ class Themes(object):
 
     def __set_icons__(self):
         self.icons = {
-        "back_arrow" : self.icons_path + "/arrow-turn-down-left.png"
+        "back_arrow" : self.icons_path + "/small-arrow-left.png",
+        "cross" : self.icons_path + "/cross.png",
+        "filter" : self.icons_path + "/filter.png",
+        "add-circle" : self.icons_path + "/add.png",
+        "delete" :self.icons_path + "/lixeira-xmark.png",
+        "check" : self.icons_path + "/check.png"
             }
         
     def get_color(self,element):

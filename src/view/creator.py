@@ -31,10 +31,10 @@ class Creator(tk.Frame):
         self.frameTopBar.grid_columnconfigure(3,weight=1)
         # self.frameTopBar.grid_columnconfigure(2,weight=5) 
         ##Title creation
-        self.closeIcon= tk.PhotoImage(file=Theme.get_icon("back_arrow")).subsample(6, 6)
+        self.closeIcon= tk.PhotoImage(file=Theme.get_icon("back_arrow"))
         self.closeBtn = tk.Button( self.frameTopBar,image = self.closeIcon,command= self.controler.unstack ,
                                   bg=Theme.get_color("element_1"),
-                                  height=40 ,width=40,borderwidth=0)
+                                  borderwidth=0)
         print("----")
         self.controler.update()
         self.update()

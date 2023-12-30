@@ -47,7 +47,7 @@ async def main():
     # for e in tasks.values():
     #     print(e)
     # await init(tasks)
-    await asyncio.gather(*[init(tasks)]) 
+    await asyncio.gather(*[init(tasks)] ) 
 
 async def test():
     while True:

@@ -30,22 +30,27 @@ class Home(tk.Frame):
         opM = tk.OptionMenu(self.frameTopBar,
                             self.variable,"ALL" ,"COMPLETED" , "NOT COMPLETED",
                            )
-        opM.config(width=35)
+        opM.config(width=20)
         # opM.pack()
         opM.grid(row=0 ,column=0)
         ##delayin button creation on the top bar
         ##Creation Button
+
+        filterImg = tk.PhotoImage(file=Theme.get_icon("filter"))
         
         buttonFilter = tk.Button(self.frameTopBar,text="Filter",bg =  Theme.get_color("element_1"),
-                                  command= self.filter_tasks_by_complete)
+                                  command= self.filter_tasks_by_complete , image  = filterImg)
+        buttonFilter.filterImg = filterImg
         buttonFilter.grid(row=0 ,column=1)
         # button.pack()
         
         ##create new task
         
+        addImg = tk.PhotoImage(file=Theme.get_icon("add-circle"))
         buttonCreateT = tk.Button(self.frameTopBar,text="+",
                                   command= lambda : controler.stack_page(Creator)
-                                  , width = 5,height=3,bg =  Theme.get_color("element_1"))
+                                  , width = 35 , height= 35 ,bg =  Theme.get_color("element_1") , image = addImg)
+        buttonCreateT.image = addImg
         buttonCreateT.grid(row=0 ,column=2)
         
         self.downFrame = tk.Frame(self,bg = Theme.get_color("big_background_darker"),
@@ -109,7 +114,10 @@ class Home(tk.Frame):
             expireDate = task.get_expire_date()
             expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
             expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
-            completeText = "o" if task.get_completed() else "O"
+
+            completeIconName =  "check" if task.get_completed() else "cross"
+            completeIcon = tk.PhotoImage(file=Theme.get_icon(completeIconName))
+
             completeColor =  Theme.get_color("correct") if task.get_completed() else  Theme.get_color("error")
             frame_task = tk.Frame(self.frameTasks,borderwidth=2, relief="solid"
                                  , bg = completeColor )
@@ -128,15 +136,20 @@ class Home(tk.Frame):
             date_label = tk.Label(frame_top, text= expireDateText, bg = expireDateColor)
             date_label.grid(row=0, column=1, padx=(1,4))
             
-            complete_btn = tk.Button(frame_top , text = completeText , border= 2
-                                     ,bg= completeColor , height=1, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
+            complete_btn = tk.Button(frame_top , image = completeIcon , border= 2
+                                     ,bg= completeColor , height= 25, command =lambda t=task: asyncio.create_task(self.controler.set_task_complete(t.get_id())))
             complete_btn.grid(row=0 , column= 0)
+            complete_btn.completeIcon = completeIcon
             
             title_label = tk.Label(frame_task, text=task.title ,wraplength=170 , height=2 ,bg = completeColor)
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
-             
-            remove_btn = tk.Button( frame_top,text = "X", height= 1 ,  bg =  Theme.get_color("element_1") ,  
-                                   command= lambda t=task: (self.controler.remove_task(t.id , self.notify)))
+            
+            removeImg = tk.PhotoImage(file=Theme.get_icon("delete")).subsample(1,1)
+
+            remove_btn = tk.Button( frame_top, height= 25 ,  bg =  Theme.get_color("element_1") ,  
+                                   command= lambda t=task: (self.controler.remove_task(t.id , self.notify)),
+                                   image = removeImg)
+            remove_btn.removeImg = removeImg
             remove_btn.grid(row = 0 , column=2)
             
             contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 

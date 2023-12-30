@@ -6,12 +6,13 @@ import asyncio
 from sqlalchemy import select , text , bindparam , insert
 import schedule
 
-session = dbConnection().getSession()
 # print("session -> " + str(session))
 print("async jobs")
 
 async def verify_expired_tasks():
     
+    session = dbConnection().getSession()
+
     async with session() as sess:
         # with session.begin():
             # tasks = await get_all_tasks()
@@ -21,10 +22,10 @@ async def verify_expired_tasks():
         now = datetime.now().date()
         for task_db in result:
             print(task_db)
-            if(task_db.get_expire_date() < now):
+            if(not(task_db.get_expired())  and task_db.get_expire_date() < now):
                 print("expirou!")
                 task_db.set_expired()
-            sess.merge(task_db)
+            await sess.merge(task_db)
             print(task_db.get_expired())
         await sess.commit()
             
@@ -43,6 +44,6 @@ async def main():
     interval = 5
     while True:
         await asyncio.sleep(interval)
-        # await verify_expired_tasks()
+        await verify_expired_tasks()
     
     
