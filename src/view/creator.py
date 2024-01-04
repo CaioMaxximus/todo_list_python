@@ -5,6 +5,7 @@ from tkinter import messagebox
 from elements.personalized_text import PersonalizedText
 from elements.personalized_entry import PersonalizedEntry
 from .Themes import Themes
+from datetime import date
 # from icons import arrow-turn-down-left.svg
 Theme = Themes("")
 
@@ -56,13 +57,14 @@ class Creator(tk.Frame):
                                         font=('GOOD TIMES', 14),
                                         bg = Theme.get_color("element_1"))
         self.calendar_label.grid(row=0 , column=0,pady=(1,8))
-        self.calendarIn= Calendar(self.calendar_area,year = 2020, month = 5,
-               day = 22,date_pattern = 'mm-dd-yyyy')
+        self.calendarIn= Calendar(self.calendar_area,date_pattern = 'mm-dd-yyyy',
+                                  mindate = date.today(),showothermonthdays = False,
+                                  background = Theme.get_color("big_background_lighter"))
         self.calendarIn.grid(row = 1)
          ##Content area
-        
-        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...",  font=('COPPERPLATE GOTHIC BOLD', 12) ,
-                                          height=8,width=35,bg = "gray")
+         
+        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...",  font=('COPPERPLATE GOTHIC BOLD', 10) ,
+                                          height=8,width=45,bg = "gray")
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String , Boolean , Date
+from sqlalchemy import Column, String , Boolean , Date , CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 import string
 import random
@@ -12,17 +12,24 @@ def generate_id():
     id = "".join([random.choice(characters) for i in range(0,10)])
     return id
 
+
+def check_constraint(column ,constraint):
+    if(len(column) > constraint):
+        raise ValueError(f"Invalid size for input , max : {constraint}")
+
 class task(Base):
         
     __tablename__ = 'tasks'
 
     id = Column(String(10), primary_key= True,default=lambda : generate_id())
-    title = Column(String(70))
-    content = Column(String(1100))
+    title = Column(String(70) , CheckConstraint("LENGTH(title) <= 70"))
+    content = Column(String(1000),CheckConstraint("LENGTH(content) <= 1000"))
     completed = Column(Boolean)
     expire_date = Column(Date)
     expired = Column(Boolean)
     
+    # def column_string(self, value , size):
+
     def __init__(self,title , content,expire_date,completed =  False):
         # self.id = id
         self.title = title
@@ -30,7 +37,12 @@ class task(Base):
         self.completed = completed
         self.expire_date = expire_date
         self.expired = False
+        check_constraint(self.content , 1000)
+        check_constraint(self.title, 70)
         self.id = generate_id()
+        
+
+
 
     def get_id(self):
         return self.id  

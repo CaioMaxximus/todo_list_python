@@ -1,0 +1,7 @@
+-Tamanho maximo dos campos - P
+- Data minima ao criar task - P
+- rolagem ao exibir textos da tasks - P
+- checar a remocao de objetos as desempilhar as views
+-Adicionar as fontes aos temas
+-Atualizar os dados quando filtrar
+-Dar continuidade aos testes

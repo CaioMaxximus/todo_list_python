@@ -2,6 +2,7 @@ from tkinter import ttk
 import tkinter as tk
 import asyncio
 from .creator import Creator
+from tkinter import scrolledtext
 from .Themes import Themes
 # from icons import arrow-turn-down-left.svg
 Theme = Themes("")
@@ -57,7 +58,7 @@ class Home(tk.Frame):
                                   borderwidth=0)
         self.downFrame.grid(row=1,column=0,sticky="nsew")
         self.downFrame.grid_rowconfigure(0,weight = 1)
-        self.downFrame.grid_columnconfigure(0,weight=10)
+        self.downFrame.grid_columnconfigure(0,weight=14)
         self.downFrame.grid_columnconfigure(1,weight=2)
 
         self.canvas = tk.Canvas(self.downFrame,bg=Theme.get_color("big_background_darker"))
@@ -65,8 +66,9 @@ class Home(tk.Frame):
         self.canvas.rowconfigure(0, weight=1)
         self.canvas.columnconfigure(0, weight=1)
 
-        self.scroll_bar = ttk.Scrollbar(self.downFrame, 
-                                        orient="vertical", command = self.canvas.yview)
+        self.scroll_bar = tk.Scrollbar(self.downFrame, 
+                                        orient="vertical", 
+                                        command = self.canvas.yview)
         self.scroll_bar.grid(row=0, column=1, sticky='ns')
         self.canvas.config(yscrollcommand = self.scroll_bar.set)
         
@@ -101,16 +103,16 @@ class Home(tk.Frame):
         ## GET TASKS AS LISTS , ALWAYS
 
         for widget in self.frameTasks.winfo_children():
-            print(type(widget))
+            # print(type(widget))
             widget.destroy()
         row_counter = 0
-        print("_________")
-        print(tasks)
+        # print("_________")
+        # print(tasks)
         for i , task in enumerate(tasks):
             print(task)
             # print(task)
             columnN = (i % 2)
-            paddX = (1, 10) if columnN == 0 else (10, 1)
+            paddX = (1, 8) if columnN == 0 else (8, 1)
             expireDate = task.get_expire_date()
             expireDateText =   ("EXPIRED" if task.expired else "EXPIRE")  +f" IN: {expireDate}" 
             expireDateColor = "#FF2B52" if task.expired else "#00D9C0"
@@ -153,10 +155,25 @@ class Home(tk.Frame):
             remove_btn.grid(row = 0 , column=2)
             
             contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 
-            content_label = tk.Label(frame_task, text=task.content, width=31, height=20,wraplength=170 ,
-                                      bg=  Theme.get_color("big_background_lighter") ,
-                                     fg = Theme.get_color("font_1"),anchor="n" )
-            content_label.grid(row=2, column=0)
+            # content_frame = tk.Frame(frame_task,)
+            # content_frame.grid(row=2, column=0)
+            content_label = scrolledtext.ScrolledText(frame_task,state = "normal",
+                                     width=28, height=20,wrap = tk.WORD ,
+                                      bg=  Theme.get_color("big_background_lighter"),
+                                     fg = (Theme.get_color("font_1")),
+                                     )
+            content_label.configure(font=("Courier", 10))
+
+            
+            content_label.grid(row=1, column=0)
+            content_label.insert(tk.INSERT, task.content)
+            content_label.configure(state="disabled")
+            # content_label.insert(tk.END, " in ScrolledText")    
+
+            # scrool_bar_content = ttk.Scrollbar(content_label,orient="vertical",
+            #                                     command=content_label.xview)
+            # content_label.config(xscrollcommand=scrool_bar_content.set)
+            # scrool_bar_content.grid(row = 0, colum = 1)
             row_counter += 1
             
         self.frameTasks.update_idletasks()

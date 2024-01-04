@@ -20,7 +20,7 @@ class to_do_app(tk.Tk):
         # self.loop = asyncio.get_event_loop()
         self.destroyed = False
         self.protocol("WM_DELETE_WINDOW" ,self.on_close)
-        self.container = tk.Canvas(self,  width=500, height=500)
+        self.container = tk.Canvas(self,  width=540, height=570)
         self.container.pack(side = "top", fill = "both" , expand= True)
         # self.container.grid(stick = "nswe")
         self.container.grid_rowconfigure(0,weight=1)
@@ -51,7 +51,6 @@ class to_do_app(tk.Tk):
         if(len(self.stack)>1):
             self.stack.pop()
         self.stack[-1].tkraise()
-
     
     def stack_page(self,page):
         self.stack.append(page(self.container,self))
@@ -143,9 +142,9 @@ exit = 1
 async def init(tasks):
     root = to_do_app(tasks)
     print("root criado")
-    root.geometry('520x560')
-    root.minsize(520, 540) 
-    root.maxsize(530, 570)
+    root.geometry('565x575')
+    root.minsize(565, 560) 
+    root.maxsize(570, 580)
     await root.updater(1/120)
     # while(exit):
     #     await asyncio.sleep(1)
