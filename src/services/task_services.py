@@ -6,7 +6,7 @@ def get_all_tasks():
     print("get all tasks")
     return task_repository.get_all_tasks()
 
-async def add_new_task(tasks , title , content, expire_date):
+async def add_new_task( title , content, expire_date):
    
    
     MIN_SIZE_TITLE = 1

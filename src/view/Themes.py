@@ -5,26 +5,47 @@ class Themes(object):
     _instance = None
     themes = {
         'synthwave':{
-            'big_background': "#8d03b2",
-            'big_background_lighter' : "#ce05db",
-            'big_background_darker' : '#6c01a2',
-            'element_1': '#f7aa21',
-            "element_2" : "#f67a27",
-            "correct" : "#76C929",
-            "error" : "#FF4218",
-            "font_1" : "white"
+            "colors" :{
+                'big_background': "#8d03b2",
+                'big_background_lighter' : "#ce05db",
+                'big_background_darker' : '#6c01a2',
+                'element_1': '#f7aa21',
+                "element_2" : "#f67a27",
+                "correct" : "#76C929",
+                "error" : "#FF4218",
+                "font_1" : "white"
+            },
+            "fonts": {
 
+                "painel": "GOOD TIMES"
+            },
+            "font_size":{
+                "main-painel" : 14,
+            }
         },
         'synthwave2':{
-            'big_background': "#3C1C64",
-            'big_background_lighter' : "#632E80",
-            'big_background_darker' : '#150947',
-            'element_1': '#FCCC2A',
-            "element_2" : "#F87E3E",
-            "correct" : "#4AD30F",
-            "error" : "#DF1025",
-            "font_1" : "white"
+            "colors" :{
+                'big_background': "#3C1C64",
+                'big_background_lighter' : "#632E80",
+                'big_background_darker' : '#150947',
+                'element_1': '#FCCC2A',
+                "element_2" : "#F87E3E",
+                "correct" : "#4AD30F",
+                "error" : "#DF1025",
+                "font_1" : "white"
+            },
+            "fonts": {
 
+                # "painel": "GOOD TIMES",
+                "painel" : "COPPERPLATE GOTHIC BOLD",
+                "content" : "Courier"
+            },
+            "font_size":{
+                "presentation" : 8,
+                "small-title" : 10,
+                "median-title" : 14,
+                "big-title" : 16
+            }
         }
     }
 
@@ -49,8 +70,14 @@ class Themes(object):
         "check" : self.icons_path + "/check.png"
             }
         
-    def get_color(self,element):
-        return self.themes[self.theme_type][element]
+    def get_color(self,name):
+        return self.themes[self.theme_type]["colors"][name]
+
+    def get_font(self,name):
+        return self.themes[self.theme_type]["fonts"][name]
+
+    def get_font_size(self,name):
+        return self.themes[self.theme_type]["font_size"][name]
 
     def get_icon(self,element):
         return self.icons[element]

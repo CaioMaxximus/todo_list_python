@@ -22,8 +22,8 @@ class task(Base):
     __tablename__ = 'tasks'
 
     id = Column(String(10), primary_key= True,default=lambda : generate_id())
-    title = Column(String(70) , CheckConstraint("LENGTH(title) <= 70"))
-    content = Column(String(1000),CheckConstraint("LENGTH(content) <= 1000"))
+    title = Column(String(70) )
+    content = Column(String(1000))
     completed = Column(Boolean)
     expire_date = Column(Date)
     expired = Column(Boolean)
@@ -38,7 +38,7 @@ class task(Base):
         self.expire_date = expire_date
         self.expired = False
         check_constraint(self.content , 1000)
-        check_constraint(self.title, 70)
+        check_constraint(self.title, 56)
         self.id = generate_id()
         
 

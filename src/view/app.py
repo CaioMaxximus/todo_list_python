@@ -57,9 +57,10 @@ class to_do_app(tk.Tk):
         print(self.stack[-1])
         self.stack[-1].tkraise()
         
-    async def createTask(self,title,content,expireD):
+    async def createTask(self,callback , title,content,expireD):
         print(self.tasks)
-        self.tasks = await task_services.add_new_task(self.tasks.copy() ,title,content,expireD)
+        # self.tasks = await task_services.add_new_task(title,content,expireD)
+        self.tasks = await self.requests_pool(self.tasks , task_services.add_new_task ,callback, title,content,expireD)
         self.notify()
     
     def notify(self):
@@ -84,7 +85,8 @@ class to_do_app(tk.Tk):
         # print(task_id)
         # print(self.tasks[task_id])
         print("removi tudo!")
-        self.tasks = await task_services.remove_task_by_id(task_id)
+        # self.tasks = await task_services.remove_task_by_id(task_id)
+        self.tasks = await self.requests_pool(self.tasks,task_services.remove_task_by_id,None,task_id )
         # self.deiconify()
         callback()
         new_window.destroy()  
@@ -126,16 +128,29 @@ class to_do_app(tk.Tk):
         
     async def set_task_complete(self, id):
         print("id ->" + id)
-        await task_services.set_task_complete(id)
+        await self.requests_pool(None , task_services.set_task_complete , None,id)
         # btText = button.cget("text")
         # changeTx = "o" if(btText == "O") else "O"
         # button.configure(text = changeTx)
         await self.get_all_tasks()
         
-    async def get_all_tasks(self):
-        self.tasks = await task_services.get_all_tasks()
+    async def get_all_tasks(self): 
+        self.tasks = await self.requests_pool(self.tasks,task_services.get_all_tasks, None)
         self.notify()
         
+    async def requests_pool(self,default_output , func, callback ,*args):
+        print(func)
+        print(args)
+        try:
+            
+            res = await func(*args)
+            if callback:
+                callback()
+            return res
+        except Exception as e:
+            messagebox.showerror("Erro", str(e))
+            return default_output
+
         
 exit = 1
 

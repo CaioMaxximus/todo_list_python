@@ -1,7 +1,11 @@
 -Tamanho maximo dos campos - P
 - Data minima ao criar task - P
 - rolagem ao exibir textos da tasks - P
-- checar a remocao de objetos as desempilhar as views
+- checar a remocao de objetos as desempilhar as views- p
 -Adicionar as fontes aos temas
 -Atualizar os dados quando filtrar
--Dar continuidade aos testes
+-Dar continuidade aos testes - 
+- Preparar ambiente para aplicacao rodar em segundo plano
+- preparar opcoes de build
+- cuidar das excecoes - p
+- comunicacao entre subrotinas

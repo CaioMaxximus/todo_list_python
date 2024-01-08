@@ -143,7 +143,8 @@ class Home(tk.Frame):
             complete_btn.grid(row=0 , column= 0)
             complete_btn.completeIcon = completeIcon
             
-            title_label = tk.Label(frame_task, text=task.title ,wraplength=170 , height=2 ,bg = completeColor)
+            title_label = tk.Label(frame_task, text=task.title ,wraplength=170 ,
+                                    height=3 ,bg = completeColor, font = (Theme.get_font("content") ,Theme.get_font_size("presentation") ))
             title_label.grid(row=1, column=0, padx=(1,10), pady=2)
             
             removeImg = tk.PhotoImage(file=Theme.get_icon("delete")).subsample(1,1)
@@ -154,26 +155,18 @@ class Home(tk.Frame):
             remove_btn.removeImg = removeImg
             remove_btn.grid(row = 0 , column=2)
             
-            contentColor = "#00D9C0" if task.get_completed() else "#FF2B52" 
-            # content_frame = tk.Frame(frame_task,)
-            # content_frame.grid(row=2, column=0)
-            content_label = scrolledtext.ScrolledText(frame_task,state = "normal",
-                                     width=28, height=20,wrap = tk.WORD ,
+            content_task = scrolledtext.ScrolledText(frame_task,state = "normal",
+                                     width=28, height=22,wrap = tk.WORD ,
                                       bg=  Theme.get_color("big_background_lighter"),
                                      fg = (Theme.get_color("font_1")),
                                      )
-            content_label.configure(font=("Courier", 10))
+            content_task.configure(font=(Theme.get_font("content"), Theme.get_font_size("small-title")))
 
             
-            content_label.grid(row=1, column=0)
-            content_label.insert(tk.INSERT, task.content)
-            content_label.configure(state="disabled")
-            # content_label.insert(tk.END, " in ScrolledText")    
-
-            # scrool_bar_content = ttk.Scrollbar(content_label,orient="vertical",
-            #                                     command=content_label.xview)
-            # content_label.config(xscrollcommand=scrool_bar_content.set)
-            # scrool_bar_content.grid(row = 0, colum = 1)
+            content_task.grid(row=2, column=0)
+            content_task.insert(tk.INSERT, task.content)
+            content_task.configure(state="disabled")
+    
             row_counter += 1
             
         self.frameTasks.update_idletasks()

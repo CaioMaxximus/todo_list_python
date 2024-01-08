@@ -45,7 +45,7 @@ class Creator(tk.Frame):
         self.closeBtn.grid(row=0,column=0,pady=(self.frameTopBar.winfo_height() - self.closeBtn.winfo_height()) // 2)
         self.titleIn = PersonalizedEntry( self.frameTopBar,bg="gray",
                                          placeholder = "Insert a title for the task",
-                                         font=('Arial 16'))
+                                         font=(Theme.get_font("painel") , Theme.get_font_size("big-title")))
         # self.titleIn.update()
         self.titleIn.grid(row = 0, column=1,sticky="we")
         ##Calendar
@@ -54,7 +54,8 @@ class Creator(tk.Frame):
         self.calendar_area.grid(row=1,column=0)
         
         self.calendar_label = tk.Label(self.calendar_area, text= "Expire Date:" , 
-                                        font=('GOOD TIMES', 14),
+                                        font=(Theme.get_font("painel"),
+                                               Theme.get_font_size("median-title")),
                                         bg = Theme.get_color("element_1"))
         self.calendar_label.grid(row=0 , column=0,pady=(1,8))
         self.calendarIn= Calendar(self.calendar_area,date_pattern = 'mm-dd-yyyy',
@@ -63,13 +64,14 @@ class Creator(tk.Frame):
         self.calendarIn.grid(row = 1)
          ##Content area
          
-        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...",  font=('COPPERPLATE GOTHIC BOLD', 10) ,
+        self.contentIn = PersonalizedText(self,placeholder = "Insert the task content...", 
+                                           font=(Theme.get_font("painel") , Theme.get_font_size("small-title")) ,
                                           height=8,width=45,bg = "gray")
         self.contentIn.grid(row=2,column=0)
         
         ##Button to create
         self.createTakBtn = tk.Button( self,text="Create Task", command= lambda : asyncio.create_task(self.create_task()),
-                                        font=('COPPERPLATE GOTHIC BOLD', 9),
+                                        font=(Theme.get_font("painel") , Theme.get_font_size("small-title")) ,
                                       height = 3 , bg = Theme.get_color("element_1"))
         self.createTakBtn.grid(row=3,column=0)
         
@@ -77,10 +79,14 @@ class Creator(tk.Frame):
         title = self.titleIn.get()
         expireD = self.calendarIn.get_date()
         content = self.contentIn.get("1.0", "end-1c")
-        print(title,expireD,content)
-        try:
-            await self.controler.createTask(title,content,expireD)
-            self.controler.unstack()
-        except ValueError as err:
-            print(err)
-            messagebox.showerror("Erro", str(err))
+        # print(title,expireD,content)
+        await self.controler.createTask(self.controler.unstack , title,content,expireD,)
+        # self.controler.unstack()
+        # try:
+        #     await self.controler.createTask(title,content,expireD)
+        #     self.controler.unstack()
+        # except ValueError as err:
+        #     print(err)
+        #     messagebox.showerror("Erro", str(err))
+
+
