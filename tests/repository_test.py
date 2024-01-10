@@ -1,9 +1,9 @@
 import unittest
 import sys
 # sys.path.append("C:\\Users\\caios\Documents\\ProjetosPessoaisLinguagens\\Python\\to_do_list\\")
-sys.path.append("..\\src")
-sys.path.append("repository")
-sys.path.append("services")
+# sys.path.append("..\\src")
+# sys.path.append("repository")
+# sys.path.append("services")
 from repository import task_repository as tk_repo
 from models.task import task
 from datetime import datetime
