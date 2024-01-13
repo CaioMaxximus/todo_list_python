@@ -21,5 +21,5 @@ if __name__ == '__main__':
     test_suite_service = unittest.TestLoader().loadTestsFromTestCase(
         TestService)  
     # Execute os testes
-    # unittest.TextTestRunner(verbosity=2).run(test_suite_repository)
+    unittest.TextTestRunner(verbosity=2).run(test_suite_repository)
     unittest.TextTestRunner(verbosity=2).run(test_suite_service)

@@ -7,7 +7,7 @@ from datetime import datetime
 from .database_definitions import dbConnection
 from sqlalchemy import select , text , bindparam , insert
 
-print("repository")
+# print("repository")
 
 async def save_new_task(newTask):
     # newTask.set_id(id)
@@ -60,7 +60,7 @@ async def set_task_complete(id):
 
     session = dbConnection().getSession()
 
-    print(id)
+    # print(id)
     async with session() as sess:
         await sess.execute(text("update tasks set completed = not completed where id = :id").bindparams(bindparam("id", id)))
         await sess.commit()

@@ -13,23 +13,27 @@ class TestRepository(unittest.TestCase):
     
 
     @async_test
-    async def test_save_task(self):
-        await tk_repo.clear_database()
-        task1 = task(title = "task test" ,
+    async def setUp(self):
+        self.task1 = task(title = "task test" ,
                     content = "task test content",
-                    expire_date = datetime.now())
-        await tk_repo.save_new_task(task1)
+                    expire_date = (datetime.now()))
+        await tk_repo.clear_database()
+
+    async def tearDownAsync(self):
+        await tk_repo.clear_database()
+
+    @async_test
+    async def test_save_task(self):
+        await tk_repo.save_new_task(self.task1)
         res = await tk_repo.get_all_tasks()
         self.assertEqual(len(list(res.keys())) , 1 , "DataBase should have one task")
 
     @async_test
     async def test_generate_id(self):
         
-        task1 = task(title = "task test" ,
-                    content = "task test content",
-                    expire_date = datetime.now())
+        
 
-        await tk_repo.save_new_task(task1) 
+        await tk_repo.save_new_task(self.task1) 
         tasksSaved = await tk_repo.get_all_tasks()
         generated_id =list(tasksSaved.values())[0].get_id()
         # print("chamou o test")
@@ -39,13 +43,8 @@ class TestRepository(unittest.TestCase):
 
     @async_test
     async def test_remove_task(self):
-        await tk_repo.clear_database()
-
-        task1 = task(title = "task test" ,
-                    content = "task test content",
-                    expire_date = datetime.now())
-
-        await tk_repo.save_new_task(task1)
+       
+        await tk_repo.save_new_task(self.task1)
         tasksSaved = await tk_repo.get_all_tasks()
         await tk_repo.remove_task(list(tasksSaved.keys())[0])
         remainingTasks = await tk_repo.get_all_tasks()
