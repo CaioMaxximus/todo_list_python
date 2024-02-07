@@ -15,39 +15,35 @@ rootDir = os.path.abspath(os.path.join(dirA , ".."))
 dbPath = os.path.join(rootDir , "db" ,"database.db")
 assetsPath = os.path.join(rootDir,"assets")
 sys.path.append(assetsPath)
-
 print(sys.path)
-
 from repository import async_jobs
 from services import task_services
 from view.app import init
 from view.Themes import Themes
 # from view.pages import init
 import asyncio
+from repository import async_jobs
+import sys
+
 
 
 Themes("synthwave2")
 
 
-# tasks = {}
-# for i in range(0,10):
-    
-#     task_services.add_new_task(tasks,f"task {i}" ,f"task {i} content",
-#                  datetime.now())
-#     print("Task number " + str(i))
 
-# print(get_all_tasks())
-
-async def main():
+async def main(args):
     
-    await (database_definitions.dbConnection().setConection([taskBase],dbPath ))
+    await (database_definitions.dbConnection().setConection([taskBase],dbPath))
     tasks = await task_services.get_all_tasks()
     print("passei tasks")
-    # init()
-    # for e in tasks.values():
-    #     print(e)
-    # await init(tasks)
-    await asyncio.gather(*[init(tasks)] ) 
+    task_view = asyncio.create_task(init(tasks , args))
+    task_background = asyncio.create_task(async_jobs.main())
+
+    await task_view
+    task_background.cancel()
+
+    #await asyncio.gather(*[] )
+
 
 async def test():
     while True:
@@ -55,10 +51,8 @@ async def test():
         print("oi")
 
 
-print(dbPath)# asyncio.run()
-# asyncio.run(test())
-asyncio.run(main())
-# loop = asyncio.get_event_loop()
-# loop.run_forever()
-# loop.close()
+if __name__ == '__main__':
+    print(dbPath)  # asyncio.run()
+    asyncio.run(main(sys.argv))
+
 

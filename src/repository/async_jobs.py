@@ -18,7 +18,7 @@ async def verify_expired_tasks():
             # tasks = await get_all_tasks()
         stm = select(taskmodel).where(taskmodel.expired == False)
         result = await sess.scalars(stm)
-        print(result)
+        print("async_jobs")
         now = datetime.now().date()
         for task_db in result:
             print(task_db)
@@ -43,7 +43,9 @@ schedule.every().day.at("00:00").do(verify_expired_tasks)
 async def main():
     interval = 5
     while True:
-        await asyncio.sleep(interval)
-        await verify_expired_tasks()
-    
+        try:
+            await asyncio.sleep(interval)
+            await verify_expired_tasks()
+        except asyncio.CancelledError:
+            raise
     

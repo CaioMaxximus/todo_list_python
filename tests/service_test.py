@@ -32,6 +32,9 @@ class TestService(unittest.TestCase):
             await task_services.add_new_task(self.title * 10, self.content, expire_date)
 
     @async_test
+    async def test_add_new_task_big_content(self):
+        pass
+    @async_test
     async def test_remove_task(self):
         await task_services.add_new_task(self.title * 10 , self.content * 10 , self.expire_date)
         tasks = await task_services.get_all_tasks()
@@ -49,6 +52,10 @@ class TestService(unittest.TestCase):
         task_updated = list(task_updated.values())[0]
 
         self.assertEqual(task_updated.completed,True)
+
+
+
+
 
 
 if __name__ == '__main__':

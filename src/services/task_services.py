@@ -9,15 +9,7 @@ async def get_all_tasks():
 async def add_new_task( title , content, expire_date):
    
     # print(title)
-    # print(content)
-    MIN_SIZE_TITLE = 1
-    MIN_SIZE_CONTENT = 10
-    if(len(list("".join(title.split(" ")))) < MIN_SIZE_TITLE):
-        raise TaskValidationError("Title must have at least one character")
-    # print(len(content))
-    if(len(list("".join(content.split(" ")))) < MIN_SIZE_CONTENT):
-        # print("erro content")
-        raise TaskValidationError(f"Task content must have at least more than {(MIN_SIZE_CONTENT - 1)}  characteres")
+    # print(content
     
     newT = task_moddel.task(completed=False,
                     title= title,
