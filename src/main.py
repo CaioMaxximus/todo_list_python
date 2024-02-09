@@ -36,7 +36,7 @@ async def main(args):
     await (database_definitions.dbConnection().setConection([taskBase],dbPath))
     tasks = await task_services.get_all_tasks()
     print("passei tasks")
-    task_view = asyncio.create_task(init(tasks , args))
+    task_view = asyncio.create_task(init(tasks, args))
     task_background = asyncio.create_task(async_jobs.main())
 
     await task_view

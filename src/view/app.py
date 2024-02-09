@@ -22,8 +22,8 @@ class to_do_app(tk.Tk):
                 screen_siz_h = e.height
         width = int(screen_siz_w / 3)
         height = int(screen_siz_h * 0.7)
-        width = 1000
-        height = 1000
+        # width = 1000
+        # height = 1000
         print("root criado")
         self.geometry(f'{width}x{height}')
         #self.minsize(width - 10, height - 10)
