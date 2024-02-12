@@ -17,7 +17,7 @@ from repository import database_definitions
 
 async def create_test_database(path):
     print(f"Creating test data base in {path} ...")
-    await database_definitions.dbConnection().setConection([taskBase] , path)
+    await database_definitions.dbConnection().setConection([taskBase], path)
     print("Test data base created!")
 
 def main():

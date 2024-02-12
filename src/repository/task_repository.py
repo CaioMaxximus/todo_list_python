@@ -2,7 +2,7 @@
     Execute the files saving and changing
 
 """""
-from models.task import task as taskmodel
+from models.task import Task as taskmodel
 from datetime import datetime
 from .database_definitions import dbConnection
 from sqlalchemy import select , text , bindparam , insert
@@ -14,11 +14,11 @@ async def save_new_task(newTask):
     session = dbConnection().getSession()
     async with session() as sess:
 
-        stm = insert(taskmodel).values(title = newTask.title,
-                                       content = newTask.content,
-                                       completed = newTask.completed,
-                                       expire_date = newTask.expire_date,
-                                       expired = newTask.expired)
+        stm = insert(taskmodel).values(_title= newTask.title,
+                                       _content= newTask.content,
+                                       _completed= newTask.completed,
+                                       _expire_date= newTask.expire_date,
+                                       _expired= newTask.expired)
         await sess.execute(stm)
         await sess.commit()
     return 
@@ -62,7 +62,7 @@ async def set_task_complete(id):
 
     # print(id)
     async with session() as sess:
-        await sess.execute(text("update tasks set completed = not completed where id = :id").bindparams(bindparam("id", id)))
+        await sess.execute(text("update tasks set _completed = not _completed where id = :id").bindparams(bindparam("id", id)))
         await sess.commit()
 
 async def clear_database():

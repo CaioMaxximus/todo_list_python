@@ -12,23 +12,18 @@ class dbConnection(object):
     engine = None
     Session = None
     
-    async def init_models(self,bases):
+    async def init_models(self, bases, action):
         async with self.engine.begin() as conn:
             for base in bases:
-                
-                try:
+
+                if action == "reflect":
                     await conn.run_sync(base.metadata.reflect)
                     print("reflected all")
-                except:
+                else:
                     await conn.run_sync(base.metadata.create_all)
                     print("create all")
                 print("Tabelas refletidas:", base.metadata.tables.keys())
 
-    
-    
-    # def __init__(self ), 
-    
-    
     def __new__(obj, *args , **kwargs):
         if obj._instance == None:
             print("criou uma sessao")
@@ -42,7 +37,10 @@ class dbConnection(object):
         # print("init_task")
         self.engine = create_async_engine("sqlite+aiosqlite:///" + dbPath, echo=False)
         # taskBase.metadata.create_all(self.engine)
-        await (self.init_models(bases))
+        if os.path.isfile(dbPath):
+            await self.init_models(bases, "reflect")
+        else:
+            await self.init_models(bases, "create")
         self.Session = sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=False)
     
     def getSession(self):

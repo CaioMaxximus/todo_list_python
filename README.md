@@ -7,7 +7,7 @@ A short app developed using python to manage tasks.
 
 - Create a task with a title, content and expire date
 - Complete or uncomplete a task
-- Filter tasks by completness
+- Filter tasks by completeness
 - Visual indicator of expired tasks
 
 ## Improvements to implement
@@ -16,7 +16,7 @@ A short app developed using python to manage tasks.
 - Notification system
 
 
-## Used tools
+## Used tools 
 
 **Graphic Interface:** Tkinter
 
@@ -29,3 +29,4 @@ A short app developed using python to manage tasks.
 - Auto initialization Script (initialize the app automatically,
   with the system boot)
 - Manage the virtual environment dependencies, to run the app.
+- (dsadsad)[dsadasd]

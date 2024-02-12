@@ -1,6 +1,6 @@
 from .database_definitions import dbConnection
 from  .task_repository import get_all_tasks
-from models.task import task as taskmodel
+from models.task import Task as taskmodel
 from datetime import datetime
 import asyncio
 from sqlalchemy import select , text , bindparam , insert
