@@ -20,33 +20,45 @@ class to_do_app(tk.Tk):
             if e.is_primary:
                 screen_siz_w = e.width
                 screen_siz_h = e.height
-        width = int(screen_siz_w / 3)
-        height = int(screen_siz_h * 0.7)
-        # width = 1000
-        # height = 1000
+        self.width = min(int(screen_siz_w / 2.5) , 1200)
+        self.height = min(int(screen_siz_h * 0.72),900)
         print("root criado")
-        self.geometry(f'{width}x{height}')
+        self.geometry(f'{self.width}x{self.height}')
         #self.minsize(width - 10, height - 10)
         #self.maxsize(width + 10, height + 10)
         self.resizable(False,False)
         # self.loop = asyncio.get_event_loop()
         self.destroyed = False
         self.protocol("WM_DELETE_WINDOW", self.on_close)
-        self.container = tk.Canvas(self)
-        self.container.pack(side="top", fill="both", expand=True)
-        self.container.grid_rowconfigure(0, weight=1)
-        self.container.grid_columnconfigure(0, weight=1)
+        # self.container = tk.Canvas(self)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        
+        self.container = tk.Canvas(self, bg = "blue")
+        self.container.grid(row=0, column=0, sticky="nsew")  
+
+        # self.container = tk.Frame(self.canvas, bg = "red")
+        # self.container.update_idletasks()
+        # self.container.grid(row=0, column=0, sticky="nsew") 
+        # self.container.grid_rowconfigure(0, weight=1)
+        # self.container.grid_columnconfigure(0, weight=1)
+
         self.stack = []
         # self.pages = []
         self.tasks = tasks
 
-        frame = Home(self.container, self, tasks)
+        frame = Home(self.container, self, self.tasks,self.width, self.height)
         frame.grid(row=0, column=0, sticky="nsew")
+        self.container.create_window((0, 0), window=frame, anchor='nw',width=self.width, height=self.height)
+
         self.stack.append(frame)
-        print(self.stack[-1])
-        frame.tkraise()
-        self.observers = []
-        self.observers.append(frame)
+        # frame.tkraise()
+        self.update_idletasks()
+        # print(self.stack[-1])
+        # frame.tkraise()
+        self.listerners = []
+        self.listerners.append(frame)
+        # self.container.update_idletasks() 
         # asyncio.create_task(self.updater(1/120))
 
     def on_close(self):
@@ -63,18 +75,18 @@ class to_do_app(tk.Tk):
         self.stack[-1].tkraise()
 
     def stack_page(self, page):
-        self.stack.append(page(self.container, self))
-        print(self.stack[-1])
+        self.stack.append(page)
+        self.container.create_window((0, 0), window=self.stack[-1], anchor='nw',width=self.width, height=self.height)
         self.stack[-1].tkraise()
 
-    async def createTask(self, callback, title, content, expireD):
+    async def createTask(self, callback, title, content, expireD , color):
         print(self.tasks)
         # self.tasks = await task_services.add_new_task(title,content,expireD)
-        self.tasks = await self.requests_pool(self.tasks, task_services.add_new_task, callback, title, content, expireD)
+        self.tasks = await self.requests_pool(self.tasks, task_services.add_new_task, callback, title, content, expireD , color)
         self.notify()
 
     def notify(self):
-        for e in self.observers:
+        for e in self.listerners:
             e.notify()
 
     def get_tasks(self):
@@ -83,7 +95,7 @@ class to_do_app(tk.Tk):
     async def updater(self, interval):
         while not self.destroyed:
             self.update()
-            await asyncio.sleep(interval)
+            await asyncio.sleep(interval * 5)
             # print("updater chamou")
         print("updater shutdown")
 
@@ -99,6 +111,7 @@ class to_do_app(tk.Tk):
 
     def remove_task(self, task, callback):
 
+        print("chamei o remove task")
         new_window = tk.Toplevel(self)
         new_window.title("REMOVE TASK")
 
@@ -135,17 +148,20 @@ class to_do_app(tk.Tk):
         # self.wait_window(new_window)
 
     async def set_task_complete(self, id):
-        print("id ->" + id)
+        print("to no app complete")
         await self.requests_pool(None, task_services.set_task_complete, None, id)
-        await self.get_all_tasks()
+        # await self.get_all_tasks()
 
     async def get_all_tasks(self):
+        print("chamou all tasks")
         self.tasks = await self.requests_pool(self.tasks, task_services.get_all_tasks, None)
         self.notify()
 
+
+    ## Remover o default-output
     async def requests_pool(self, default_output, func, callback, *args):
         print(func)
-        print(args)
+        # print(args)
         try:
 
             res = await func(*args)
@@ -154,7 +170,7 @@ class to_do_app(tk.Tk):
             return res
         except Exception as e:
             messagebox.showerror("Erro", str(e))
-            return default_output
+            raise 
 
 
 async def init(tasks, args):

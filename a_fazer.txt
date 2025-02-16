@@ -9,6 +9,8 @@
 - Adicionar as fontes aos temas - p
 - ajustar o tamanho da janela para que seja-dinãmico -p
 
+- stickers sao colagens em um quadro negro, possuiem cores para diferentes para cadas tipo de tarefa, isso será implementado - p
+- ativar rolagem dos stickers - p
 
 
 - Dar continuidade aos testes -

@@ -1,3 +1,4 @@
+
 import sys
 import os
 from models.task import Base as taskBase
@@ -26,21 +27,26 @@ from repository import async_jobs
 import sys
 
 
+themes_dic = {
+    0:"office_vibes",
+    1:"cyberpunk_vibes"
+}
 
-Themes("synthwave2")
+Themes(themes_dic[1])
 
 
 
 async def main(args):
     
     await (database_definitions.dbConnection().setConection([taskBase],dbPath))
+    # await task_services.drop_tables()
     tasks = await task_services.get_all_tasks()
     print("passei tasks")
     task_view = asyncio.create_task(init(tasks, args))
-    task_background = asyncio.create_task(async_jobs.main())
+    # task_background = asyncio.create_task(async_jobs.main())
 
     await task_view
-    task_background.cancel()
+    # task_background.cancel()
 
     #await asyncio.gather(*[] )
 

@@ -16,7 +16,8 @@ class TestRepository(unittest.TestCase):
     async def setUp(self):
         self.task1 = Task(title="task test",
                           content="task test content",
-                          expire_date=(datetime.now()))
+                          expire_date=(datetime.now()),
+                          color = "#FFEB99")
         await tk_repo.clear_database()
 
     async def tearDownAsync(self):

@@ -27,12 +27,8 @@ sed -i "${LINE}s/.*/ACTUAL_FOLDER=${ACTUAL_FOLDER_PATH}/" init.sh
 
 echo "Copying todo_service to /etc/systemd/system"
 chmod 755 init.sh
-chmod 755 init_script_caller.sh
-chmod 755 todo_service.service
-sudo cp -p todo_service.service /etc/systemd/system/todo_service.service
-sudo cp -p init_script_caller.sh /etc/systemd/system/init_script_caller.sh
-systemctl enable --now todo_service.service
-##
+echo "$PATH_EXEC" >> ~/.xprofile
 
 echo "Done.."
 echo "Starting app.."
+./init.sh

@@ -46,7 +46,53 @@ class Themes(object):
                 "median-title" : 14,
                 "big-title" : 16
             }
+        },
+        "office_vibes":{
+            "colors" :{
+                'big_background': "#F5F5F5",
+                'big_background_lighter' : "#FFFFFF",
+                'big_background_darker' : '#E0E0E0',
+                'element_1': '#2B2B2B',
+                "element_2" : "#4B4B4B",
+                "correct" : "#28A745",
+                "error" : "#DC3545",
+                "font_1" : "#000000"
+            },
+            "fonts": {
+                "painel" : "Arial",
+                "content" : "Times New Roman"
+            },
+            "font_size":{
+                "presentation" : 9,
+                "small-title" : 12,
+                "median-title" : 16,
+                "big-title" : 20
+            }
+        },
+        "cyberpunk_vibes":{
+            "colors" :{
+                'big_background': "#1B1F23",
+                'big_background_lighter' : "#3C4A51",
+                'big_background_darker' : '#0F1215',
+                'element_1': '#00FF00',
+                "element_2" : "#FF00FF",
+                "correct" : "#00FFFF",
+                "error" : "#FF0033",
+                "font_1" : "#FFFFFF"
+            },
+            "fonts": {
+                "painel" : "Orbitron",
+                "content" : "VT323"
+            },
+            "font_size":{
+                "presentation" : 8,
+                "small-title" : 10,
+                "median-title" : 14,
+                "big-title" : 16
+            }
         }
+
+
     }
 
    

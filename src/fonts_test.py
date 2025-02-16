@@ -7,7 +7,6 @@ fonts=list(font.families())
 fonts.sort()
 
 def populate(frame):
-    '''Put in the fonts'''
     listnumber = 1
     for item in fonts:
         label = "listlabel" + str(listnumber)
@@ -15,7 +14,6 @@ def populate(frame):
         listnumber += 1
 
 def onFrameConfigure(canvas):
-    '''Reset the scroll region to encompass the inner frame'''
     canvas.configure(scrollregion=canvas.bbox("all"))
 
 canvas = Canvas(root, borderwidth=0, background="#ffffff")

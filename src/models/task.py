@@ -49,9 +49,10 @@ class Task(Base):
     _completed = Column(Boolean)
     _expire_date = Column(Date)
     _expired = Column(Boolean)
+    _color = Column(String(7))
 
     # def column_string(self, value , size):
-    def __init__(self, title, content, expire_date, completed=False):
+    def __init__(self, title, content, expire_date,color, completed=False):
         """
         Parameters
         ---------
@@ -59,36 +60,18 @@ class Task(Base):
         the title of the task with a maximum size define in init method
         content : str
         the content of the task with a maximum size define in init method
+        expire_date: date
+        represent the title expiration date
         completed : bool
         represent the completeness of the title, even if tsk is
         expired or not
-
-        expire_date: date
-        represent the title expiration date
         """
         self.title = title
         self.content = content
         self._completed = completed
         self.expire_date = expire_date
         self._expired = False
-
-        # max_title_size = 70
-        # max_size_content = 1000
-        # min_size_title = 1
-        # min_size_content = 10
-        # validate_max_size_field(self.content, "content", max_size_content,)
-        # validate_max_size_field(self.title, "title", max_title_size)
-        # validate_min_size_field(self.content, "content", min_size_content)
-        # validate_min_size_field(self.title, "title", min_size_title)
-        # self.id = generate_id()
-
-    # @hybrid_property
-    # def id(self):
-    #     return self._id
-    #
-    # @id.setter
-    # def id(self):
-    #     self._id = generate_id()
+        self.color = color
 
     @validates("title")
     def validate_size_title(self, key, title):
@@ -96,7 +79,7 @@ class Task(Base):
         min_size = 1
         max_size = 70
         if min_size > len(list("".join(title.split(" ")))):
-            raise TaskValidationError(f"title must have at least {min_size} character")
+            raise TaskValidationError(f"Title must have at least {min_size} character")
         if max_size < len(title):
             TaskValidationError(f"Title must have less than {max_size} character")
 
@@ -106,9 +89,9 @@ class Task(Base):
         min_size = 10
         max_size = 1000
         if min_size > len(list("".join(content.split(" ")))):
-            raise TaskValidationError(f"title must have at least {min_size} character")
+            raise TaskValidationError(f"Content must have at least {min_size} character")
         if max_size < len(content):
-            TaskValidationError(f"Title must have less than {max_size} character")
+            TaskValidationError(f"Content must have less than {max_size} character")
 
     # def validate_max_size_field(column, field_name, size):
     #     if len(column) > size:
@@ -151,6 +134,15 @@ class Task(Base):
     @property
     def expired(self):
         return self._expired
+    
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, color):
+        self._color = color
 
     @expired.setter
     def expired(self,value=None):

@@ -4,6 +4,7 @@ task
 	- text_content
 	- expired
 	- completed
+	- color
 	
 	+ set_title
 	+ set_text

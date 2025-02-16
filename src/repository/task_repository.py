@@ -18,7 +18,8 @@ async def save_new_task(newTask):
                                        _content= newTask.content,
                                        _completed= newTask.completed,
                                        _expire_date= newTask.expire_date,
-                                       _expired= newTask.expired)
+                                       _expired= newTask.expired,
+                                       _color = newTask.color)
         await sess.execute(stm)
         await sess.commit()
     return 
@@ -69,6 +70,12 @@ async def clear_database():
     session = dbConnection().getSession()
     async with session() as sess:
         await sess.execute(text("delete from tasks"))
+        await sess.commit()
+
+async def drop_tables():
+    session = dbConnection().getSession()
+    async with session() as sess:
+        await sess.execute(text("drop table tasks"))
         await sess.commit()
 
 # async def get_all_tasks_expired():

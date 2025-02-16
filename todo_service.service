@@ -1,0 +1,8 @@
+[Unit]
+Description=init_todo_app
+
+[Service]
+ExecStart=/bin/sh /etc/systemd/system/init_script_caller.sh
+
+[Install]
+WantedBy=multi-user.target
