@@ -20,9 +20,9 @@ class Home(tk.Frame):
         self.wigdets_list = []
         self.parent = parent
         self.controler = controler
-        self.number_of_columns = 3
+        self.number_of_columns = 2
 
-        
+      
         self.grid(row=0, column=0, sticky="nsew") 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=10)
@@ -36,6 +36,7 @@ class Home(tk.Frame):
         self.frameTopBar.grid_columnconfigure(0, weight=1)
         self.frameTopBar.grid_columnconfigure(1, weight=2)
         self.frameTopBar.grid_columnconfigure(2, weight=2)
+        self.frameTopBar.grid_columnconfigure(3, weight=2)
 
         self.variable = tk.StringVar(self.frameTopBar)
         self.variable.set("NOT COMPLETED")
@@ -45,6 +46,14 @@ class Home(tk.Frame):
         opM.config(width=20)
         # opM.pack()
         opM.grid(row=0, column=0)
+
+        self.columns_num_variable = tk.StringVar(self.frameTopBar)
+        self.columns_num_variable.set("■ ■")
+        self.opM_columns_num = tk.OptionMenu(self.frameTopBar,
+                            self.columns_num_variable, "■ ■", "■ ■ ■", "■ ■ ■ ■")
+        self.opM_columns_num .config(width=10)
+        # opM.pack()
+        self.opM_columns_num .grid(row=0, column=2)
         ##delayin button creation on the top bar
         ##Creation Button
 
@@ -63,13 +72,14 @@ class Home(tk.Frame):
                                   command=lambda: controler.stack_page(self.creator_pg)
                                   , width=35, height=35, bg=Theme.get_color("element_1"), image=addImg)
         buttonCreateT.image = addImg
-        buttonCreateT.grid(row=0, column=2)
+        buttonCreateT.grid(row=0, column=3)
 
         self.downFrame = tk.Frame(self, bg=Theme.get_color("big_background_darker"),
                                   borderwidth=0)
         self.downFrame.grid(row=1, column=0, sticky="nsew")
-        self.downFrame.grid_rowconfigure(0, weight=1)
-        self.downFrame.grid_columnconfigure(0, weight=14)
+        self.downFrame.grid_rowconfigure(0, weight=23)
+        self.downFrame.grid_rowconfigure(1, weight=1)
+        self.downFrame.grid_columnconfigure(0, weight=17)
         self.downFrame.grid_columnconfigure(1, weight=2)
 
         self.canvas = tk.Canvas(self.downFrame, bg="#125304",highlightbackground= "#C19A6B", 
@@ -84,19 +94,26 @@ class Home(tk.Frame):
                                        command=self.canvas.yview)
         self.scroll_bar.grid(row=0, column=1, sticky='ns')
 
+
+        self.scroll_bar_horizontal = tk.Scrollbar(self.downFrame,
+                                       orient="horizontal",
+                                       command=self.canvas.xview)
+        self.scroll_bar_horizontal.grid(row=1, column=0, sticky='we')
+
         # Frames list
         self.frameTasks = tk.Frame(self.canvas, borderwidth=2,
                                     bg="#125304")
         # self.frameTasks.grid(row = 0 ,column=0,sticky= 'ew')
-        self.frameTasks.grid_columnconfigure(0, weight=10)
-        self.frameTasks.grid_columnconfigure(1, weight=10)
+        # self.frameTasks.grid_columnconfigure(0, weight=10)
+        # self.frameTasks.grid_columnconfigure(1, weight=10)
         self.frameTasks.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
         
-
+        
         #self.frameTasks.bind("<B1-Motion>", lambda event, frame=self.frameTasks: self.resize_frame(event, frame))
         self.canvas.create_window((0, 0), window=self.frameTasks, anchor='nw')
         self.canvas.configure(yscrollcommand=self.scroll_bar.set)
+        self.canvas.configure(xscrollcommand=self.scroll_bar_horizontal.set)
         self.canvas.bind("<Enter>", self.bind_mouse_scroll)
         self.canvas.bind("<Leave>", self.unbind_mouse_scroll)
         # Adicionar rolagem pelo mouse (scroll wheel)
@@ -117,12 +134,21 @@ class Home(tk.Frame):
         self.canvas.unbind_all("<Button-5>")
 
     def on_mouse_scroll(self, event):
-        if event.num == 4:  # Linux scroll up
-            self.canvas.yview_scroll(-1, "units")
-        elif event.num == 5:  # Linux scroll down
-            self.canvas.yview_scroll(1, "units")
-        else:  # Windows scroll
-            self.canvas.yview_scroll(-1 * (event.delta // 120), "units")
+        if event.state & 0x1:  # Verifica se Shift está pressionado
+            if event.num == 4:  # Linux scroll left
+                self.canvas.xview_scroll(-1, "units")
+            elif event.num == 5:  # Linux scroll right
+                self.canvas.xview_scroll(1, "units")
+            else:  # Windows scroll horizontal
+                self.canvas.xview_scroll(-1 * (event.delta // 120), "units")
+        else:
+            if event.num == 4:  # Linux scroll up
+                self.canvas.yview_scroll(-1, "units")
+            elif event.num == 5:  # Linux scroll down
+                self.canvas.yview_scroll(1, "units")
+            else:  # Windows scroll vertical
+                self.canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
     def resize_frame(self, event, frame):
         width = event.x
         height = event.y
@@ -192,6 +218,7 @@ class Home(tk.Frame):
         # #  print(tasks)
         self.task_wigdets= {}
         self.wigdets_list = []
+        self.number_of_columns = self.columns_num_variable.get().count("■")
 
 
         for widget in self.frameTasks.winfo_children():

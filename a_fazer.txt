@@ -12,6 +12,7 @@
 - stickers sao colagens em um quadro negro, possuiem cores para diferentes para cadas tipo de tarefa, isso será implementado - p
 - ativar rolagem dos stickers - p
 
+- verificar a concorrencia em algumas funcoes
 
 - Dar continuidade aos testes -
 - Preparar ambiente para aplicacao rodar em segundo plano -
